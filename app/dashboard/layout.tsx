@@ -29,7 +29,7 @@ export default function DashboardLayout({
     <div className="min-h-screen flex bg-black text-white">
       {/* Sidebar */}
       <aside className="w-64 border-r border-white/10 bg-black p-4">
-        <h2 className="text-lg font-semibold">Panel</h2>
+        <h2 className="text-lg font-semibold">PULZE</h2>
 
         <nav className="mt-6 space-y-2 text-sm">
           <NavItem href="/dashboard" label="Dashboard" />
