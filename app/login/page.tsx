@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Page() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-black text-white">
@@ -17,14 +19,13 @@ export default function Page() {
             className="w-full rounded-xl bg-black/40 border border-white/10 px-3 py-2 outline-none focus:border-white/30"
           />
 
-          <button className="w-full rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 transition px-4 py-2 font-medium">
+          <Link
+            href="/dashboard"
+            className="block text-center w-full rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 transition px-4 py-2 font-medium"
+          >
             Entrar
-          </button>
+          </Link>
         </div>
-
-        <p className="mt-4 text-xs text-white/40">
-          Pantalla visual (sin lógica todavía)
-        </p>
       </div>
     </main>
   );
