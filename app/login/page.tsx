@@ -1,12 +1,33 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleLogin() {
-    localStorage.setItem("landzy_auth", "1");
+  async function handleLogin() {
+    setError("");
+    setLoading(true);
+
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    setLoading(false);
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setError(data?.error || "Error");
+      return;
+    }
+
     router.push("/dashboard");
   }
 
@@ -18,11 +39,15 @@ export default function Page() {
 
         <div className="mt-6 space-y-3">
           <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="Email"
             className="w-full rounded-xl bg-black/40 border border-white/10 px-3 py-2 outline-none focus:border-white/30"
           />
           <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Password"
             className="w-full rounded-xl bg-black/40 border border-white/10 px-3 py-2 outline-none focus:border-white/30"
@@ -31,15 +56,14 @@ export default function Page() {
           <button
             type="button"
             onClick={handleLogin}
-            className="w-full rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 transition px-4 py-2 font-medium"
+            disabled={loading}
+            className="w-full rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 transition px-4 py-2 font-medium disabled:opacity-60"
           >
-            Entrar
+            {loading ? "Entrando..." : "Entrar"}
           </button>
-        </div>
 
-        <p className="mt-4 text-xs text-white/40">
-          Login temporal (Fase 1)
-        </p>
+          {error && <p className="text-sm text-red-400">{error}</p>}
+        </div>
       </div>
     </main>
   );
