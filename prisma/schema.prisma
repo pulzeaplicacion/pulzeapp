@@ -13,4 +13,19 @@ model User {
   password  String
   role      String   @default("admin")
   createdAt DateTime @default(now())
+
+  lines     Line[]
+}
+
+model Line {
+  id        String   @id @default(cuid())
+  name      String
+  number    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
