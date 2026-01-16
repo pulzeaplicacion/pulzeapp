@@ -129,7 +129,9 @@ export default function LineasPage() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-xl font-semibold">Líneas</h1>
-        <p className="text-sm text-white/60">Tus números de WhatsApp para atención</p>
+        <p className="text-sm text-white/60">
+          Tus números de WhatsApp para atención
+        </p>
       </div>
 
       {/* AGREGAR */}
@@ -149,7 +151,9 @@ export default function LineasPage() {
         <button
           onClick={addLine}
           disabled={loadingAdd}
-          className="rounded-lg bg-fuchsia-600 px-4 py-2 text-sm font-medium disabled:opacity-60"
+          className="rounded-lg bg-fuchsia-600 px-4 py-2 text-sm font-medium
+                     cursor-pointer hover:bg-fuchsia-500
+                     disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loadingAdd ? "..." : "Agregar"}
         </button>
@@ -162,7 +166,8 @@ export default function LineasPage() {
         {lines.map((l) => (
           <div
             key={l.id}
-            className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+            className="flex items-center justify-between rounded-xl
+                       border border-white/10 bg-white/5 px-4 py-3"
           >
             {editingId === l.id ? (
               <div className="flex w-full items-center justify-between gap-3">
@@ -183,13 +188,16 @@ export default function LineasPage() {
                   <button
                     onClick={() => saveEdit(l.id)}
                     disabled={loadingId === l.id}
-                    className="rounded-lg border border-white/10 px-3 py-1 text-xs disabled:opacity-60"
+                    className="rounded-lg border border-white/10 px-3 py-1 text-xs
+                               cursor-pointer hover:bg-white/10
+                               disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {loadingId === l.id ? "..." : "Guardar"}
                   </button>
                   <button
                     onClick={cancelEdit}
-                    className="rounded-lg border border-white/10 px-3 py-1 text-xs"
+                    className="rounded-lg border border-white/10 px-3 py-1 text-xs
+                               cursor-pointer hover:bg-white/10"
                   >
                     Cancelar
                   </button>
@@ -205,14 +213,17 @@ export default function LineasPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => startEdit(l)}
-                    className="rounded-lg border border-white/10 px-3 py-1 text-xs"
+                    className="rounded-lg border border-white/10 px-3 py-1 text-xs
+                               cursor-pointer hover:bg-white/10"
                   >
                     Editar
                   </button>
                   <button
                     onClick={() => removeLine(l.id)}
                     disabled={loadingId === l.id}
-                    className="rounded-lg border border-white/10 px-3 py-1 text-xs disabled:opacity-60"
+                    className="rounded-lg border border-white/10 px-3 py-1 text-xs
+                               cursor-pointer hover:bg-white/10
+                               disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {loadingId === l.id ? "..." : "Borrar"}
                   </button>
