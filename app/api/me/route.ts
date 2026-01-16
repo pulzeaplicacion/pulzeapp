@@ -1,23 +1,22 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../../lib/prisma";
 
-export async function GET(req: Request) {
+function getUserIdFromCookie(req: Request) {
   const cookie = req.headers.get("cookie") || "";
   const match = cookie.match(/(?:^|;\s*)auth=([^;]+)/);
-  const userId = match?.[1];
+  return match?.[1] || null;
+}
 
-  if (!userId) {
-    return NextResponse.json({ error: "No auth" }, { status: 401 });
-  }
+export async function GET(req: Request) {
+  const userId = getUserIdFromCookie(req);
+  if (!userId) return NextResponse.json({ error: "No auth" }, { status: 401 });
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, email: true, role: true, createdAt: true },
+    select: { id: true, email: true, role: true, maxLines: true },
   });
 
-  if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 401 });
-  }
+  if (!user) return NextResponse.json({ error: "No auth" }, { status: 401 });
 
   return NextResponse.json({ user });
 }

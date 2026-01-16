@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "maxLines" INTEGER NOT NULL DEFAULT 1;
