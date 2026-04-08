@@ -12,7 +12,7 @@ model User {
   email     String   @unique
   password  String
   role      String   @default("user")
-  maxLines Int @default(2)
+  maxLines  Int      @default(1)
   createdAt DateTime @default(now())
 
   lines Line[]
@@ -22,10 +22,20 @@ model Line {
   id        String   @id @default(cuid())
   name      String
   number    String
+  position  Int      @default(0)
   createdAt DateTime @default(now())
 
   userId String
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@unique([userId, number])
+}
+
+model RoundRobinState {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  currentIndex Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

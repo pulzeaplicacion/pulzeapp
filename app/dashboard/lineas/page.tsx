@@ -10,6 +10,8 @@ type Line = {
 
 export default function LineasPage() {
   const [lines, setLines] = useState<Line[]>([]);
+  const [maxLines, setMaxLines] = useState<number>(1);
+
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [error, setError] = useState("");
@@ -25,11 +27,14 @@ export default function LineasPage() {
     const res = await fetch("/api/lines", { cache: "no-store" });
     const data = await res.json().catch(() => ({}));
     setLines(data.lines || []);
+    setMaxLines(typeof data.maxLines === "number" ? data.maxLines : 1);
   }
 
   useEffect(() => {
     load();
   }, []);
+
+  const limitReached = lines.length >= maxLines;
 
   // =========================
   // AGREGAR
@@ -130,34 +135,40 @@ export default function LineasPage() {
       <div>
         <h1 className="text-xl font-semibold">Líneas</h1>
         <p className="text-sm text-white/60">
-          Tus números de WhatsApp para atención
+          Usadas: {lines.length} / {maxLines}
         </p>
       </div>
 
       {/* AGREGAR */}
-      <div className="flex gap-2">
-        <input
-          className="rounded-lg bg-black border border-white/10 px-3 py-2 text-sm"
-          placeholder="Nombre (Ej: Morena)"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          className="rounded-lg bg-black border border-white/10 px-3 py-2 text-sm"
-          placeholder="Número (Ej: +54911...)"
-          value={number}
-          onChange={(e) => setNumber(e.target.value)}
-        />
-        <button
-          onClick={addLine}
-          disabled={loadingAdd}
-          className="rounded-lg bg-fuchsia-600 px-4 py-2 text-sm font-medium
-                     cursor-pointer hover:bg-fuchsia-500
-                     disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loadingAdd ? "..." : "Agregar"}
-        </button>
-      </div>
+      {!limitReached ? (
+        <div className="flex gap-2">
+          <input
+            className="rounded-lg bg-black border border-white/10 px-3 py-2 text-sm"
+            placeholder="Nombre (Ej: Morena)"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            className="rounded-lg bg-black border border-white/10 px-3 py-2 text-sm"
+            placeholder="Número (Ej: +54911...)"
+            value={number}
+            onChange={(e) => setNumber(e.target.value)}
+          />
+          <button
+            onClick={addLine}
+            disabled={loadingAdd}
+            className="rounded-lg bg-fuchsia-600 px-4 py-2 text-sm font-medium
+                       cursor-pointer hover:bg-fuchsia-500
+                       disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loadingAdd ? "..." : "Agregar"}
+          </button>
+        </div>
+      ) : (
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm">
+          Límite alcanzado. Necesitás upgrade para agregar más líneas.
+        </div>
+      )}
 
       {error && <p className="text-sm text-red-400">{error}</p>}
 
