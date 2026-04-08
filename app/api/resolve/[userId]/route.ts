@@ -68,7 +68,7 @@ export async function GET(
       },
     })
 
-    const message = `Hola, quiero un usuario. Código: ${code}`
+    const message = `Hola, quiero un usuario. BONO: ${code}`
     const whatsappUrl = `https://wa.me/${selectedLine.number}?text=${encodeURIComponent(message)}`
 
     return NextResponse.redirect(whatsappUrl)
