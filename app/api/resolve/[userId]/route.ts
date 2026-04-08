@@ -71,13 +71,7 @@ export async function GET(
     const message = `Hola, quiero un usuario. Código: ${code}`
     const whatsappUrl = `https://wa.me/${selectedLine.number}?text=${encodeURIComponent(message)}`
 
-    return NextResponse.json({
-      code,
-      selectedLine,
-      currentIndex,
-      nextIndex,
-      whatsappUrl,
-    })
+    return NextResponse.redirect(whatsappUrl)
   } catch (error) {
     console.error("RESOLVE ERROR:", error)
 
