@@ -10,11 +10,14 @@ export async function GET(
 
     const lines = await prisma.line.findMany({
       where: { userId },
-      // ⚠ temporalmente sacamos position
+      orderBy: { position: "asc" },
     })
 
     if (!lines.length) {
-      return NextResponse.json({ error: "No lines" }, { status: 404 })
+      return NextResponse.json(
+        { error: "No hay líneas disponibles" },
+        { status: 404 }
+      )
     }
 
     let state = await prisma.roundRobinState.findUnique({
@@ -42,7 +45,14 @@ export async function GET(
       nextIndex,
     })
   } catch (error) {
-    console.error(error)
-    return NextResponse.json({ error: "Error interno" }, { status: 500 })
+    console.error("ROUND ROBIN ERROR:", error)
+
+    return NextResponse.json(
+      {
+        error: "Error interno",
+        detail: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    )
   }
 }
