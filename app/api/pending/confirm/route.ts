@@ -5,6 +5,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => null)
     const code = String(body?.code || "").trim()
+    const playerName = String(body?.playerName || "").trim()
+    const amount = Number(body?.amount || 0)
+    const isGoodPlayer = Boolean(body?.isGoodPlayer)
 
     if (!code) {
       return NextResponse.json(
@@ -36,6 +39,9 @@ export async function POST(req: Request) {
       data: {
         status: "confirmed",
         confirmedAt: new Date(),
+        playerName: playerName || null,
+        amount: amount || null,
+        isGoodPlayer,
       },
     })
 
