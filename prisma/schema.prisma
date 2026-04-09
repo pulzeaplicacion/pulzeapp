@@ -41,9 +41,11 @@ model RoundRobinState {
 }
 
 model Pending {
-  id        String   @id @default(cuid())
-  code      String   @unique
-  userId    String
-  lineId    String
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  code        String   @unique
+  userId      String
+  lineId      String
+  status      String   @default("pending")
+  confirmedAt DateTime?
+  createdAt   DateTime @default(now())
 }
