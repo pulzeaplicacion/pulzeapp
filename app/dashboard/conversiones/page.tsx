@@ -17,6 +17,9 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmingCode, setConfirmingCode] = useState("");
+  const [selectedCode, setSelectedCode] = useState("");
+  const [playerName, setPlayerName] = useState("");
+  const [amount, setAmount] = useState("");
 
   async function loadPending() {
     try {
@@ -39,16 +42,34 @@ export default function Page() {
     loadPending();
   }, []);
 
-  async function handleConfirm(code: string) {
+  function openConfirmModal(code: string) {
+    setSelectedCode(code);
+    setPlayerName("");
+    setAmount("");
+  }
+
+  function closeConfirmModal() {
+    setSelectedCode("");
+    setPlayerName("");
+    setAmount("");
+  }
+
+  async function handleConfirm() {
     try {
-      setConfirmingCode(code);
+      if (!selectedCode) return;
+
+      setConfirmingCode(selectedCode);
 
       const res = await fetch("/api/pending/confirm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({
+          code: selectedCode,
+          playerName,
+          amount,
+        }),
       });
 
       const data = await res.json();
@@ -57,6 +78,7 @@ export default function Page() {
         throw new Error(data?.error || "Error confirmando");
       }
 
+      closeConfirmModal();
       await loadPending();
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error interno");
@@ -114,11 +136,10 @@ export default function Page() {
                       <span className="text-white/40">—</span>
                     ) : (
                       <button
-                        onClick={() => handleConfirm(item.code)}
-                        disabled={confirmingCode === item.code}
-                        className="rounded-lg bg-green-600 px-3 py-1 text-white hover:bg-green-500 disabled:opacity-50"
+                        onClick={() => openConfirmModal(item.code)}
+                        className="rounded-lg bg-green-600 px-3 py-1 text-white hover:bg-green-500"
                       >
-                        {confirmingCode === item.code ? "Confirmando..." : "Confirmar"}
+                        Confirmar
                       </button>
                     )}
                   </td>
@@ -126,6 +147,57 @@ export default function Page() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {selectedCode && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900 p-6 shadow-2xl">
+            <h2 className="text-xl font-semibold">Confirmar bono {selectedCode}</h2>
+
+            <div className="mt-5">
+              <label className="mb-2 block text-sm text-white/70">
+                Jugador / Apodo
+              </label>
+              <input
+                type="text"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none"
+                placeholder="Ej: juan123"
+              />
+            </div>
+
+            <div className="mt-4">
+              <label className="mb-2 block text-sm text-white/70">
+                Monto
+              </label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none"
+                placeholder="Ej: 15000"
+              />
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={closeConfirmModal}
+                className="w-full rounded-xl border border-white/10 px-4 py-3 text-white/80 hover:bg-white/5"
+              >
+                Cancelar
+              </button>
+
+              <button
+                onClick={handleConfirm}
+                disabled={confirmingCode === selectedCode}
+                className="w-full rounded-xl bg-green-600 px-4 py-3 font-medium text-white hover:bg-green-500 disabled:opacity-50"
+              >
+                {confirmingCode === selectedCode ? "Confirmando..." : "Confirmar jugador"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
