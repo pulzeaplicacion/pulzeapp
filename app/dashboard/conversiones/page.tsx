@@ -7,6 +7,10 @@ type PendingItem = {
   code: string;
   userId: string;
   lineId: string;
+  line?: {
+    name: string;
+    number: string;
+  };
   status: string;
   playerName: string | null;
   amount: number | null;
@@ -124,7 +128,9 @@ export default function Page() {
               {pending.map((item) => (
                 <tr key={item.id} className="border-t border-white/10">
                   <td className="px-4 py-3 font-semibold">{item.code}</td>
-                  <td className="px-4 py-3 text-white/70">{item.lineId}</td>
+                  <td className="px-4 py-3 text-white/70">
+                    {item.line?.name || item.lineId}
+                  </td>
                   <td className="px-4 py-3 text-white/70">
                     {item.playerName || "—"}
                   </td>
