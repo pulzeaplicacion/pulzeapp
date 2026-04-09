@@ -8,6 +8,8 @@ type PendingItem = {
   userId: string;
   lineId: string;
   status: string;
+  playerName: string | null;
+  amount: number | null;
   confirmedAt: string | null;
   createdAt: string;
 };
@@ -111,6 +113,8 @@ export default function Page() {
               <tr className="text-left">
                 <th className="px-4 py-3">Bono</th>
                 <th className="px-4 py-3">Línea</th>
+                <th className="px-4 py-3">Jugador</th>
+                <th className="px-4 py-3">Monto</th>
                 <th className="px-4 py-3">Estado</th>
                 <th className="px-4 py-3">Fecha</th>
                 <th className="px-4 py-3">Acción</th>
@@ -121,6 +125,12 @@ export default function Page() {
                 <tr key={item.id} className="border-t border-white/10">
                   <td className="px-4 py-3 font-semibold">{item.code}</td>
                   <td className="px-4 py-3 text-white/70">{item.lineId}</td>
+                  <td className="px-4 py-3 text-white/70">
+                    {item.playerName || "—"}
+                  </td>
+                  <td className="px-4 py-3 text-white/70">
+                    {item.amount ? `$${item.amount.toLocaleString("es-AR")}` : "—"}
+                  </td>
                   <td className="px-4 py-3">
                     {item.status === "confirmed" ? (
                       <span className="text-green-400">Confirmado</span>
