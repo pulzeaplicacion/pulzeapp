@@ -93,25 +93,65 @@ export default function Page() {
     }
   }
 
+  const pendientes = pending.filter((p) => p.status !== "confirmed");
+  const confirmados = pending.filter((p) => p.status === "confirmed");
+
   return (
     <div>
       <h1 className="text-2xl font-semibold">Conversiones</h1>
-      <p className="mt-2 text-white/60">Pendientes generados desde la landing</p>
 
-      {loading && (
-        <p className="mt-6 text-white/60">Cargando pendientes...</p>
+      {/* 🔶 PENDIENTES */}
+      <h2 className="mt-6 text-lg font-semibold text-yellow-400">Pendientes</h2>
+
+      {pendientes.length === 0 && (
+        <p className="mt-2 text-white/60">No hay pendientes.</p>
       )}
 
-      {error && (
-        <p className="mt-6 text-red-400">{error}</p>
+      {pendientes.length > 0 && (
+        <div className="mt-4 overflow-hidden rounded-2xl border border-white/10">
+          <table className="w-full text-sm">
+            <thead className="bg-white/5">
+              <tr className="text-left">
+                <th className="px-4 py-3">Bono</th>
+                <th className="px-4 py-3">Línea</th>
+                <th className="px-4 py-3">Fecha</th>
+                <th className="px-4 py-3">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendientes.map((item) => (
+                <tr key={item.id} className="border-t border-white/10">
+                  <td className="px-4 py-3 font-semibold">{item.code}</td>
+                  <td className="px-4 py-3 text-white/70">
+                    {item.line?.name || item.lineId}
+                  </td>
+                  <td className="px-4 py-3 text-white/70">
+                    {new Date(item.createdAt).toLocaleString("es-AR")}
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => openConfirmModal(item.code)}
+                      className="rounded-lg bg-green-600 px-3 py-1 text-white hover:bg-green-500"
+                    >
+                      Confirmar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
-      {!loading && !error && pending.length === 0 && (
-        <p className="mt-6 text-white/60">No hay pendientes todavía.</p>
+      {/* 🟢 CONFIRMADOS */}
+      <h2 className="mt-10 text-lg font-semibold text-green-400">Confirmados</h2>
+
+      {confirmados.length === 0 && (
+        <p className="mt-2 text-white/60">No hay confirmados.</p>
       )}
 
-      {!loading && !error && pending.length > 0 && (
-        <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
+      {confirmados.length > 0 && (
+        <div className="mt-4 overflow-hidden rounded-2xl border border-white/10">
           <table className="w-full text-sm">
             <thead className="bg-white/5">
               <tr className="text-left">
@@ -119,13 +159,11 @@ export default function Page() {
                 <th className="px-4 py-3">Línea</th>
                 <th className="px-4 py-3">Jugador</th>
                 <th className="px-4 py-3">Monto</th>
-                <th className="px-4 py-3">Estado</th>
                 <th className="px-4 py-3">Fecha</th>
-                <th className="px-4 py-3">Acción</th>
               </tr>
             </thead>
             <tbody>
-              {pending.map((item) => (
+              {confirmados.map((item) => (
                 <tr key={item.id} className="border-t border-white/10">
                   <td className="px-4 py-3 font-semibold">{item.code}</td>
                   <td className="px-4 py-3 text-white/70">
@@ -135,29 +173,12 @@ export default function Page() {
                     {item.playerName || "—"}
                   </td>
                   <td className="px-4 py-3 text-white/70">
-                    {item.amount ? `$${item.amount.toLocaleString("es-AR")}` : "—"}
-                  </td>
-                  <td className="px-4 py-3">
-                    {item.status === "confirmed" ? (
-                      <span className="text-green-400">Confirmado</span>
-                    ) : (
-                      <span className="text-yellow-400">Pendiente</span>
-                    )}
+                    {item.amount
+                      ? `$${item.amount.toLocaleString("es-AR")}`
+                      : "—"}
                   </td>
                   <td className="px-4 py-3 text-white/70">
                     {new Date(item.createdAt).toLocaleString("es-AR")}
-                  </td>
-                  <td className="px-4 py-3">
-                    {item.status === "confirmed" ? (
-                      <span className="text-white/40">—</span>
-                    ) : (
-                      <button
-                        onClick={() => openConfirmModal(item.code)}
-                        className="rounded-lg bg-green-600 px-3 py-1 text-white hover:bg-green-500"
-                      >
-                        Confirmar
-                      </button>
-                    )}
                   </td>
                 </tr>
               ))}
@@ -166,10 +187,13 @@ export default function Page() {
         </div>
       )}
 
+      {/* MODAL */}
       {selectedCode && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
           <div className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900 p-6 shadow-2xl">
-            <h2 className="text-xl font-semibold">Confirmar bono {selectedCode}</h2>
+            <h2 className="text-xl font-semibold">
+              Confirmar bono {selectedCode}
+            </h2>
 
             <div className="mt-5">
               <label className="mb-2 block text-sm text-white/70">
@@ -180,7 +204,6 @@ export default function Page() {
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none"
-                placeholder="Ej: juan123"
               />
             </div>
 
@@ -193,7 +216,6 @@ export default function Page() {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none"
-                placeholder="Ej: 15000"
               />
             </div>
 
@@ -208,9 +230,11 @@ export default function Page() {
               <button
                 onClick={handleConfirm}
                 disabled={confirmingCode === selectedCode}
-                className="w-full rounded-xl bg-green-600 px-4 py-3 font-medium text-white hover:bg-green-500 disabled:opacity-50"
+                className="w-full rounded-xl bg-green-600 px-4 py-3 text-white hover:bg-green-500 disabled:opacity-50"
               >
-                {confirmingCode === selectedCode ? "Confirmando..." : "Confirmar jugador"}
+                {confirmingCode === selectedCode
+                  ? "Confirmando..."
+                  : "Confirmar"}
               </button>
             </div>
           </div>
