@@ -28,6 +28,8 @@ model Line {
   userId String
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  pending Pending[]
+
   @@index([userId])
   @@unique([userId, number])
 }
@@ -48,7 +50,10 @@ model Pending {
   status       String   @default("pending")
   playerName   String?
   amount       Float?
-  isGoodPlayer Boolean  @default(false)
   confirmedAt  DateTime?
   createdAt    DateTime @default(now())
+
+  line Line @relation(fields: [lineId], references: [id])
+
+  @@index([userId])
 }

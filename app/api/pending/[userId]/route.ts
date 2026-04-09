@@ -11,6 +11,9 @@ export async function GET(
     const pending = await prisma.pending.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
+      include: {
+        line: true,
+      },
     })
 
     return NextResponse.json({ pending })
