@@ -96,12 +96,41 @@ export default function Page() {
   const pendientes = pending.filter((p) => p.status !== "confirmed");
   const confirmados = pending.filter((p) => p.status === "confirmed");
 
+  // 🔥 MÉTRICAS
+  const total = confirmados.reduce((acc, item) => acc + (item.amount || 0), 0);
+  const jugadores = confirmados.length;
+  const promedio = jugadores > 0 ? total / jugadores : 0;
+
   return (
     <div>
       <h1 className="text-2xl font-semibold">Conversiones</h1>
 
+      {/* 📊 MÉTRICAS */}
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="rounded-2xl border border-white/10 bg-zinc-900 p-4">
+          <p className="text-sm text-white/60">Total generado</p>
+          <p className="mt-1 text-xl font-semibold text-green-400">
+            ${total.toLocaleString("es-AR")}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-zinc-900 p-4">
+          <p className="text-sm text-white/60">Jugadores</p>
+          <p className="mt-1 text-xl font-semibold">
+            {jugadores}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-zinc-900 p-4">
+          <p className="text-sm text-white/60">Promedio</p>
+          <p className="mt-1 text-xl font-semibold">
+            ${Math.round(promedio).toLocaleString("es-AR")}
+          </p>
+        </div>
+      </div>
+
       {/* 🔶 PENDIENTES */}
-      <h2 className="mt-6 text-lg font-semibold text-yellow-400">Pendientes</h2>
+      <h2 className="mt-8 text-lg font-semibold text-yellow-400">Pendientes</h2>
 
       {pendientes.length === 0 && (
         <p className="mt-2 text-white/60">No hay pendientes.</p>
