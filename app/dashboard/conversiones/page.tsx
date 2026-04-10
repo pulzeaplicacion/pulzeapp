@@ -18,6 +18,12 @@ type PendingItem = {
   createdAt: string;
 };
 
+type MeResponse = {
+  id: string;
+  email: string;
+  role: string;
+};
+
 export default function Page() {
   const [pending, setPending] = useState<PendingItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,10 +33,14 @@ export default function Page() {
   const [playerName, setPlayerName] = useState("");
   const [amount, setAmount] = useState("");
   const [filter, setFilter] = useState("all");
+  const [userId, setUserId] = useState("");
 
-  async function loadPending() {
+  async function loadPending(currentUserId?: string) {
     try {
-      const res = await fetch("/api/pending/test-user-1");
+      const finalUserId = currentUserId || userId;
+      if (!finalUserId) return;
+
+      const res = await fetch(`/api/pending/${finalUserId}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -46,7 +56,24 @@ export default function Page() {
   }
 
   useEffect(() => {
-    loadPending();
+    async function init() {
+      try {
+        const meRes = await fetch("/api/me");
+        const meData: MeResponse = await meRes.json();
+
+        if (!meRes.ok || !meData?.id) {
+          throw new Error("No se pudo obtener el usuario");
+        }
+
+        setUserId(meData.id);
+        await loadPending(meData.id);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error interno");
+        setLoading(false);
+      }
+    }
+
+    init();
   }, []);
 
   function openConfirmModal(code: string) {
@@ -94,7 +121,6 @@ export default function Page() {
     }
   }
 
-  // 🔥 FILTRO POR FECHA
   function isInFilter(dateString: string) {
     const date = new Date(dateString);
     const now = new Date();
@@ -123,7 +149,6 @@ export default function Page() {
   const pendientes = filtered.filter((p) => p.status !== "confirmed");
   const confirmados = filtered.filter((p) => p.status === "confirmed");
 
-  // 🔥 MÉTRICAS
   const total = confirmados.reduce((acc, item) => acc + (item.amount || 0), 0);
   const jugadores = confirmados.length;
   const promedio = jugadores > 0 ? total / jugadores : 0;
@@ -132,7 +157,6 @@ export default function Page() {
     <div>
       <h1 className="text-2xl font-semibold">Conversiones</h1>
 
-      {/* 🔥 FILTRO */}
       <div className="mt-4 flex gap-2">
         {[
           { key: "all", label: "Todo" },
@@ -154,7 +178,6 @@ export default function Page() {
         ))}
       </div>
 
-      {/* 📊 MÉTRICAS */}
       <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-white/10 bg-zinc-900 p-4">
           <p className="text-sm text-white/60">Total generado</p>
@@ -165,9 +188,7 @@ export default function Page() {
 
         <div className="rounded-2xl border border-white/10 bg-zinc-900 p-4">
           <p className="text-sm text-white/60">Jugadores</p>
-          <p className="mt-1 text-xl font-semibold">
-            {jugadores}
-          </p>
+          <p className="mt-1 text-xl font-semibold">{jugadores}</p>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-zinc-900 p-4">
@@ -178,14 +199,17 @@ export default function Page() {
         </div>
       </div>
 
-      {/* 🔶 PENDIENTES */}
       <h2 className="mt-8 text-lg font-semibold text-yellow-400">Pendientes</h2>
 
-      {pendientes.length === 0 && (
+      {loading && <p className="mt-2 text-white/60">Cargando pendientes...</p>}
+
+      {error && <p className="mt-2 text-red-400">{error}</p>}
+
+      {!loading && !error && pendientes.length === 0 && (
         <p className="mt-2 text-white/60">No hay pendientes.</p>
       )}
 
-      {pendientes.length > 0 && (
+      {!loading && !error && pendientes.length > 0 && (
         <div className="mt-4 overflow-hidden rounded-2xl border border-white/10">
           <table className="w-full text-sm">
             <thead className="bg-white/5">
@@ -221,14 +245,13 @@ export default function Page() {
         </div>
       )}
 
-      {/* 🟢 CONFIRMADOS */}
       <h2 className="mt-10 text-lg font-semibold text-green-400">Confirmados</h2>
 
-      {confirmados.length === 0 && (
+      {!loading && !error && confirmados.length === 0 && (
         <p className="mt-2 text-white/60">No hay confirmados.</p>
       )}
 
-      {confirmados.length > 0 && (
+      {!loading && !error && confirmados.length > 0 && (
         <div className="mt-4 overflow-hidden rounded-2xl border border-white/10">
           <table className="w-full text-sm">
             <thead className="bg-white/5">
@@ -265,7 +288,6 @@ export default function Page() {
         </div>
       )}
 
-      {/* MODAL */}
       {selectedCode && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
           <div className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900 p-6 shadow-2xl">
