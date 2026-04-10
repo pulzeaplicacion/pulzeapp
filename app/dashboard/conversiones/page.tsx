@@ -19,9 +19,11 @@ type PendingItem = {
 };
 
 type MeResponse = {
-  id: string;
-  email: string;
-  role: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+  };
 };
 
 export default function Page() {
@@ -61,12 +63,12 @@ export default function Page() {
         const meRes = await fetch("/api/me");
         const meData: MeResponse = await meRes.json();
 
-        if (!meRes.ok || !meData?.id) {
+        if (!meRes.ok || !meData?.user?.id) {
           throw new Error("No se pudo obtener el usuario");
         }
 
-        setUserId(meData.id);
-        await loadPending(meData.id);
+        setUserId(meData.user.id);
+        await loadPending(meData.user.id);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error interno");
         setLoading(false);
@@ -202,7 +204,6 @@ export default function Page() {
       <h2 className="mt-8 text-lg font-semibold text-yellow-400">Pendientes</h2>
 
       {loading && <p className="mt-2 text-white/60">Cargando pendientes...</p>}
-
       {error && <p className="mt-2 text-red-400">{error}</p>}
 
       {!loading && !error && pendientes.length === 0 && (
