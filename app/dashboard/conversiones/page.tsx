@@ -26,6 +26,7 @@ export default function Page() {
   const [selectedCode, setSelectedCode] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [amount, setAmount] = useState("");
+  const [filter, setFilter] = useState("all");
 
   async function loadPending() {
     try {
@@ -93,8 +94,34 @@ export default function Page() {
     }
   }
 
-  const pendientes = pending.filter((p) => p.status !== "confirmed");
-  const confirmados = pending.filter((p) => p.status === "confirmed");
+  // 🔥 FILTRO POR FECHA
+  function isInFilter(dateString: string) {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    if (filter === "today") {
+      return date.toDateString() === now.toDateString();
+    }
+
+    if (filter === "yesterday") {
+      const yesterday = new Date();
+      yesterday.setDate(now.getDate() - 1);
+      return date.toDateString() === yesterday.toDateString();
+    }
+
+    if (filter === "week") {
+      const weekAgo = new Date();
+      weekAgo.setDate(now.getDate() - 7);
+      return date >= weekAgo;
+    }
+
+    return true;
+  }
+
+  const filtered = pending.filter((p) => isInFilter(p.createdAt));
+
+  const pendientes = filtered.filter((p) => p.status !== "confirmed");
+  const confirmados = filtered.filter((p) => p.status === "confirmed");
 
   // 🔥 MÉTRICAS
   const total = confirmados.reduce((acc, item) => acc + (item.amount || 0), 0);
@@ -104,6 +131,28 @@ export default function Page() {
   return (
     <div>
       <h1 className="text-2xl font-semibold">Conversiones</h1>
+
+      {/* 🔥 FILTRO */}
+      <div className="mt-4 flex gap-2">
+        {[
+          { key: "all", label: "Todo" },
+          { key: "today", label: "Hoy" },
+          { key: "yesterday", label: "Ayer" },
+          { key: "week", label: "7 días" },
+        ].map((f) => (
+          <button
+            key={f.key}
+            onClick={() => setFilter(f.key)}
+            className={`rounded-lg px-3 py-1 text-sm ${
+              filter === f.key
+                ? "bg-white text-black"
+                : "bg-white/10 text-white hover:bg-white/20"
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
 
       {/* 📊 MÉTRICAS */}
       <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
