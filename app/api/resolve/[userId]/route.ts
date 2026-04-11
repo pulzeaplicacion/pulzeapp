@@ -15,7 +15,21 @@ export async function GET(
   context: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = await context.params
+    const { userId: landingKey } = await context.params
+
+    const user = await prisma.user.findUnique({
+      where: { landingKey },
+      select: { id: true },
+    })
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Usuario no encontrado" },
+        { status: 404 }
+      )
+    }
+
+    const userId = user.id
 
     const lines = await prisma.line.findMany({
       where: { userId },
