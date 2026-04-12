@@ -54,7 +54,7 @@ model Pending {
   confirmedAt  DateTime?
   createdAt    DateTime @default(now())
 
-  line Line @relation(fields: [lineId], references: [id])
+  line Line @relation(fields: [lineId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }

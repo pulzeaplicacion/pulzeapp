@@ -88,6 +88,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
+    await prisma.pending.deleteMany({
+      where: { lineId: id },
+    });
+
     await prisma.line.delete({
       where: { id },
     });
