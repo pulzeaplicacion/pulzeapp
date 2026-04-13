@@ -137,7 +137,7 @@ export default function AdminPage() {
 
           <input
             type="text"
-            placeholder="landingKey (ej: virgi)"
+            placeholder="landingKey opcional (ej: virgi)"
             value={landingKey}
             onChange={(e) => setLandingKey(e.target.value)}
             className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm outline-none"
