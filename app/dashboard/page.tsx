@@ -23,10 +23,16 @@ type PendingItem = {
   createdAt: string;
 };
 
+type Track = {
+  visits: number;
+  clicks: number;
+};
+
 export default function Page() {
   const router = useRouter();
   const [me, setMe] = useState<Me | null>(null);
   const [items, setItems] = useState<PendingItem[]>([]);
+  const [track, setTrack] = useState<Track>({ visits: 0, clicks: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,6 +52,17 @@ export default function Page() {
 
         if (pendingRes.ok) {
           setItems(pendingData.pending || []);
+        }
+
+        // 🔥 NUEVO: traer tracking
+        const trackRes = await fetch(`/api/track/stats/${meData.user.id}`);
+        const trackData = await trackRes.json().catch(() => ({}));
+
+        if (trackRes.ok) {
+          setTrack({
+            visits: trackData.visits || 0,
+            clicks: trackData.clicks || 0,
+          });
         }
       } finally {
         setLoading(false);
@@ -76,8 +93,24 @@ export default function Page() {
   );
 
   const jugadoresConfirmados = confirmados.length;
+
   const ticketPromedio =
     jugadoresConfirmados > 0 ? totalJugado / jugadoresConfirmados : 0;
+
+  const conversionClickToPlayer =
+    track.clicks > 0
+      ? Math.round((jugadoresConfirmados / track.clicks) * 100)
+      : 0;
+
+  const conversionVisitToClick =
+    track.visits > 0
+      ? Math.round((track.clicks / track.visits) * 100)
+      : 0;
+
+  const conversionVisitToPlayer =
+    track.visits > 0
+      ? Math.round((jugadoresConfirmados / track.visits) * 100)
+      : 0;
 
   return (
     <div>
@@ -109,12 +142,12 @@ export default function Page() {
       <div className="mt-6 grid gap-4 md:grid-cols-5">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <p className="text-sm text-white/60">Visitas</p>
-          <p className="mt-2 text-3xl font-semibold">—</p>
+          <p className="mt-2 text-3xl font-semibold">{track.visits}</p>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <p className="text-sm text-white/60">Clicks WhatsApp</p>
-          <p className="mt-2 text-3xl font-semibold">—</p>
+          <p className="mt-2 text-3xl font-semibold">{track.clicks}</p>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -161,20 +194,17 @@ export default function Page() {
           <div className="mt-4 space-y-3 text-sm text-white/70">
             <div className="flex items-center justify-between">
               <span>Visitas → Click</span>
-              <span>—</span>
+              <span>{conversionVisitToClick}%</span>
             </div>
             <div className="flex items-center justify-between">
               <span>Click → Jugador</span>
-              <span>—</span>
+              <span>{conversionClickToPlayer}%</span>
             </div>
             <div className="flex items-center justify-between">
               <span>Visitas → Jugador</span>
-              <span>—</span>
+              <span>{conversionVisitToPlayer}%</span>
             </div>
           </div>
-          <p className="mt-4 text-xs text-white/40">
-            Se completa cuando sumemos tracking de visitas y clicks.
-          </p>
         </div>
       </div>
 
@@ -183,7 +213,7 @@ export default function Page() {
         <p className="mt-2 text-sm text-white/60">
           {loading
             ? "Cargando datos…"
-            : "Este dashboard ya usa confirmados reales para las métricas principales. Visitas, clicks y funnel se completan cuando conectemos el tracking de landing."}
+            : "Ahora el panel muestra métricas reales de visitas, clicks y conversiones."}
         </p>
       </div>
     </div>
