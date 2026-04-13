@@ -8,32 +8,57 @@ type Player = {
   phone: string;
 };
 
+type MeResponse = {
+  user?: {
+    id: string;
+    email: string;
+    role: string;
+  };
+};
+
 export default function Page() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState("");
 
-  function load() {
-    const saved = localStorage.getItem("agenda_players");
+  function getStorageKey(currentUserId: string) {
+    return `agenda_players_${currentUserId}`;
+  }
+
+  function load(currentUserId: string) {
+    const saved = localStorage.getItem(getStorageKey(currentUserId));
     if (saved) {
       setPlayers(JSON.parse(saved));
+    } else {
+      setPlayers([]);
     }
   }
 
   useEffect(() => {
-    load();
+    async function init() {
+      const res = await fetch("/api/me");
+      const data: MeResponse = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data?.user?.id) return;
+
+      setUserId(data.user.id);
+      load(data.user.id);
+    }
+
+    init();
   }, []);
 
-  function save(list: Player[]) {
-    localStorage.setItem("agenda_players", JSON.stringify(list));
+  function save(list: Player[], currentUserId: string) {
+    localStorage.setItem(getStorageKey(currentUserId), JSON.stringify(list));
     setPlayers(list);
   }
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!name.trim() || !phone.trim()) return;
+    if (!name.trim() || !phone.trim() || !userId) return;
 
     const newPlayer: Player = {
       id: crypto.randomUUID(),
@@ -42,7 +67,7 @@ export default function Page() {
     };
 
     const updated = [newPlayer, ...players];
-    save(updated);
+    save(updated, userId);
 
     fetch("/api/vip", {
       method: "POST",
@@ -60,8 +85,9 @@ export default function Page() {
   }
 
   function handleDelete(id: string) {
+    if (!userId) return;
     const updated = players.filter((p) => p.id !== id);
-    save(updated);
+    save(updated, userId);
   }
 
   return (
