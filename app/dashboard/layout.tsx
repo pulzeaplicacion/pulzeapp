@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function NavItem({ href, label }: { href: string; label: string }) {
   const pathname = usePathname();
@@ -20,11 +21,29 @@ function NavItem({ href, label }: { href: string; label: string }) {
   );
 }
 
+type MeResponse = {
+  user?: {
+    email: string;
+    role: string;
+  };
+};
+
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [me, setMe] = useState<MeResponse | null>(null);
+
+  useEffect(() => {
+    fetch("/api/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => data && setMe(data))
+      .catch(() => {});
+  }, []);
+
+  const isAdmin = me?.user?.role === "admin";
+
   return (
     <div className="min-h-screen flex bg-black text-white">
       {/* Sidebar */}
@@ -36,6 +55,7 @@ export default function DashboardLayout({
           <NavItem href="/dashboard/conversiones" label="Conversiones" />
           <NavItem href="/dashboard/agenda" label="Agenda" />
           <NavItem href="/dashboard/lineas" label="Líneas" />
+          {isAdmin && <NavItem href="/dashboard/admin" label="Panel Master" />}
         </nav>
       </aside>
 
