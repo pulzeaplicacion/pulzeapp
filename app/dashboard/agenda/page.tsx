@@ -30,7 +30,7 @@ export default function Page() {
     setPlayers(list);
   }
 
-  function handleAdd(e: React.FormEvent) {
+  async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
 
     if (!name.trim() || !phone.trim()) return;
@@ -43,6 +43,17 @@ export default function Page() {
 
     const updated = [newPlayer, ...players];
     save(updated);
+
+    fetch("/api/vip", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: newPlayer.name,
+        phone: newPlayer.phone,
+      }),
+    });
 
     setName("");
     setPhone("");

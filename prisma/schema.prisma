@@ -58,3 +58,11 @@ model Pending {
 
   @@index([userId])
 }
+
+model VipPlayer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  userId    String
+  createdAt DateTime @default(now())
+}
