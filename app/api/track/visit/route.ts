@@ -1,10 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
-    const user = await prisma.user.findFirst({
-      where: { landingKey: "virgi" },
+    const url = new URL(req.url);
+    const key = url.searchParams.get("key");
+
+    if (!key) {
+      return NextResponse.json(
+        { error: "Missing key" },
+        { status: 400 }
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { landingKey: key },
       select: { id: true },
     });
 

@@ -253,13 +253,15 @@
       document.body.appendChild(p);
     }
 
-    const LANDING_KEY = "virgi";
+    const params = new URLSearchParams(window.location.search);
+    const LANDING_KEY = params.get("key") || "virgi";
+
     const visitKey = "visit_counted_" + LANDING_KEY;
     const clickKey = "click_counted_" + LANDING_KEY;
 
     // Track visita solo 1 vez por sesión y por cajero
     if (!sessionStorage.getItem(visitKey)) {
-      fetch("/api/track/visit", {
+      fetch(`/api/track/visit?key=${LANDING_KEY}`, {
         method: "POST"
       });
 
@@ -274,7 +276,7 @@
 
         // Track click solo 1 vez por sesión y por cajero
         if (!sessionStorage.getItem(clickKey)) {
-          fetch("/api/track/click", {
+          fetch(`/api/track/click?key=${LANDING_KEY}`, {
             method: "POST"
           });
 
@@ -285,7 +287,8 @@
           fbq('track','Contact');
           fbq('trackCustom','WAclick');
         }
-        setTimeout(()=>location.href="/api/resolve/virgi",300);
+
+        setTimeout(()=>location.href=`/api/resolve/${LANDING_KEY}`,300);
       }
     });
   </script>
