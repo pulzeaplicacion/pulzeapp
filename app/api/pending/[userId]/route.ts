@@ -8,6 +8,20 @@ export async function GET(
   try {
     const { userId } = await context.params
 
+    const expiresBefore = new Date(Date.now() - 48 * 60 * 60 * 1000)
+
+    await prisma.pending.deleteMany({
+      where: {
+        userId,
+        status: {
+          not: "confirmed",
+        },
+        createdAt: {
+          lt: expiresBefore,
+        },
+      },
+    })
+
     const pending = await prisma.pending.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
