@@ -253,11 +253,22 @@
       document.body.appendChild(p);
     }
 
+    // Track visita
+    fetch("/api/track/visit", {
+      method: "POST"
+    });
+
     // Click a WhatsApp (rotador)
     let redirected=false;
     document.addEventListener("click",e=>{
       if(e.target.closest("#cta-btn") && !redirected){
         redirected=true;
+
+        // Track click
+        fetch("/api/track/click", {
+          method: "POST"
+        });
+
         if(window.fbq){
           fbq('track','Contact');
           fbq('trackCustom','WAclick');

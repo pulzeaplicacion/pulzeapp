@@ -66,3 +66,13 @@ model VipPlayer {
   userId    String
   createdAt DateTime @default(now())
 }
+
+model TrackEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+}
