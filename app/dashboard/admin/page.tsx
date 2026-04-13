@@ -9,8 +9,15 @@ type User = {
   landingKey?: string | null;
 };
 
+type Vip = {
+  id: string;
+  name: string;
+  phone: string;
+};
+
 export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([]);
+  const [vip, setVip] = useState<Vip[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
@@ -26,8 +33,15 @@ export default function AdminPage() {
     setUsers(data.users || []);
   }
 
+  async function loadVip() {
+    const res = await fetch("/api/vip/list", { cache: "no-store" });
+    const data = await res.json().catch(() => ({}));
+    setVip(data.vip || []);
+  }
+
   useEffect(() => {
     load();
+    loadVip();
   }, []);
 
   async function updateMaxLines(id: string, value: number) {
@@ -185,6 +199,26 @@ export default function AdminPage() {
           </div>
         ))
       )}
+
+      <div className="pt-6">
+        <h2 className="text-sm font-medium mb-2">Jugadores VIP (backup)</h2>
+
+        {vip.length === 0 ? (
+          <p className="text-sm text-white/60">Sin jugadores aún</p>
+        ) : (
+          <div className="space-y-2">
+            {vip.map((p) => (
+              <div
+                key={p.id}
+                className="rounded-xl border border-white/10 bg-white/5 p-3"
+              >
+                <div className="text-sm">{p.name}</div>
+                <div className="text-xs text-white/60">{p.phone}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
