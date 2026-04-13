@@ -253,10 +253,18 @@
       document.body.appendChild(p);
     }
 
-    // Track visita
-    fetch("/api/track/visit", {
-      method: "POST"
-    });
+    const LANDING_KEY = "virgi";
+    const visitKey = "visit_counted_" + LANDING_KEY;
+    const clickKey = "click_counted_" + LANDING_KEY;
+
+    // Track visita solo 1 vez por sesión y por cajero
+    if (!sessionStorage.getItem(visitKey)) {
+      fetch("/api/track/visit", {
+        method: "POST"
+      });
+
+      sessionStorage.setItem(visitKey, "true");
+    }
 
     // Click a WhatsApp (rotador)
     let redirected=false;
@@ -264,10 +272,14 @@
       if(e.target.closest("#cta-btn") && !redirected){
         redirected=true;
 
-        // Track click
-        fetch("/api/track/click", {
-          method: "POST"
-        });
+        // Track click solo 1 vez por sesión y por cajero
+        if (!sessionStorage.getItem(clickKey)) {
+          fetch("/api/track/click", {
+            method: "POST"
+          });
+
+          sessionStorage.setItem(clickKey, "true");
+        }
 
         if(window.fbq){
           fbq('track','Contact');
