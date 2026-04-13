@@ -8,6 +8,7 @@ type Me = {
     id: string;
     email: string;
     role: string;
+    landingKey: string | null;
   };
 };
 
@@ -54,7 +55,6 @@ export default function Page() {
           setItems(pendingData.pending || []);
         }
 
-        // 🔥 NUEVO: traer tracking
         const trackRes = await fetch(`/api/track/stats/${meData.user.id}`);
         const trackData = await trackRes.json().catch(() => ({}));
 
@@ -138,6 +138,31 @@ export default function Page() {
           Salir
         </button>
       </div>
+
+      {me?.user.landingKey && (
+        <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+          <p className="text-sm text-white/60">Tu link de acceso</p>
+
+          <div className="mt-2 flex items-center gap-2">
+            <input
+              value={`https://pulze.site/${me.user.landingKey}`}
+              readOnly
+              className="flex-1 rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm outline-none"
+            />
+
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `https://pulze.site/${me.user.landingKey}`
+                );
+              }}
+              className="rounded-lg border border-white/10 px-3 py-2 text-xs hover:bg-white/10"
+            >
+              Copiar
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-6 grid gap-4 md:grid-cols-5">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
