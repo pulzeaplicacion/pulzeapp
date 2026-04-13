@@ -13,7 +13,13 @@ export async function GET(req: Request) {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, email: true, role: true, maxLines: true },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      maxLines: true,
+      landingKey: true,
+    },
   });
 
   if (!user) return NextResponse.json({ error: "No auth" }, { status: 401 });
