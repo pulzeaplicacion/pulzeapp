@@ -176,13 +176,18 @@ export async function POST(req: Request) {
       )
     }
 
+    const pendingMeta = pending as typeof pending & {
+      fbp?: string | null
+      fbc?: string | null
+    }
+
     const metaOk = await sendPurchaseToMeta(req, {
       code,
       playerName: playerName || null,
       amount,
       userId: pending.userId,
-      fbp: pending.fbp || null,
-      fbc: pending.fbc || null,
+      fbp: pendingMeta.fbp || null,
+      fbc: pendingMeta.fbc || null,
     })
 
     if (!metaOk) {

@@ -69,9 +69,9 @@ export async function GET(
         code,
         userId,
         lineId: selectedLine.id,
-        fbp,
-        fbc,
-      },
+        ...(fbp ? { fbp } : {}),
+        ...(fbc ? { fbc } : {}),
+      } as any,
     })
 
     const message = `Hola, quiero un usuario. BONO: ${code}`
