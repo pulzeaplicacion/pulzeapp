@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function Page({
+export default async function Page({
   params,
 }: {
-  params: { key: string };
+  params: Promise<{ key: string }>;
 }) {
-  redirect(`/landing.html?key=${encodeURIComponent(params.key)}`);
+  const { key } = await params;
+
+  redirect(`/landing.html?key=${encodeURIComponent(key)}`);
 }
