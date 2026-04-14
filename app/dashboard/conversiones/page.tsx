@@ -34,6 +34,7 @@ export default function Page() {
   const [selectedCode, setSelectedCode] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [amount, setAmount] = useState("");
+  const [phone, setPhone] = useState("");
   const [filter, setFilter] = useState("all");
   const [userId, setUserId] = useState("");
 
@@ -82,12 +83,14 @@ export default function Page() {
     setSelectedCode(code);
     setPlayerName("");
     setAmount("");
+    setPhone("");
   }
 
   function closeConfirmModal() {
     setSelectedCode("");
     setPlayerName("");
     setAmount("");
+    setPhone("");
   }
 
   async function handleConfirm() {
@@ -105,6 +108,7 @@ export default function Page() {
           code: selectedCode,
           playerName,
           amount,
+          phone,
         }),
       });
 
@@ -316,6 +320,19 @@ export default function Page() {
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none"
+              />
+            </div>
+
+            <div className="mt-4">
+              <label className="mb-2 block text-sm text-white/70">
+                Teléfono (opcional)
+              </label>
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Ej: 3411234567"
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none"
               />
             </div>

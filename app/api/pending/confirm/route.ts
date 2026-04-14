@@ -36,6 +36,7 @@ async function sendPurchaseToMeta(
     userId: string
     fbp: string | null
     fbc: string | null
+    phone: string | null
   }
 ) {
   const user = await prisma.user.findUnique({
@@ -73,6 +74,11 @@ async function sendPurchaseToMeta(
 
   if (params.fbc) {
     userData.fbc = params.fbc
+  }
+
+  // 🔥 NUEVO: PHONE
+  if (params.phone) {
+    userData.ph = [sha256(params.phone)]
   }
 
   const payload = {
@@ -132,6 +138,7 @@ export async function POST(req: Request) {
     const code = String(body?.code || "").trim()
     const playerName = String(body?.playerName || "").trim()
     const amount = Number(body?.amount || 0)
+    const phone = String(body?.phone || "").trim()
 
     if (!code) {
       return NextResponse.json(
@@ -176,7 +183,6 @@ export async function POST(req: Request) {
       )
     }
 
-    // Leer fbp/fbc por SQL directo para evitar el problema del Prisma Client viejo en producción
     const metaRows = await prisma.$queryRawUnsafe<Array<{ fbp: string | null; fbc: string | null }>>(
       `
       SELECT "fbp", "fbc"
@@ -196,6 +202,7 @@ export async function POST(req: Request) {
       userId: pending.userId,
       fbp: metaRow.fbp || null,
       fbc: metaRow.fbc || null,
+      phone: phone || null,
     })
 
     if (!metaOk) {
