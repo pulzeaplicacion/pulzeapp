@@ -7,6 +7,8 @@ type User = {
   email: string;
   maxLines: number;
   landingKey?: string | null;
+  pixelId?: string | null;
+  capiToken?: string | null;
 };
 
 type Vip = {
@@ -27,10 +29,24 @@ export default function AdminPage() {
   const [maxLines, setMaxLines] = useState("1");
   const [creating, setCreating] = useState(false);
 
+  const [pixelInputs, setPixelInputs] = useState<Record<string, string>>({});
+  const [tokenInputs, setTokenInputs] = useState<Record<string, string>>({});
+
   async function load() {
     const res = await fetch("/api/admin/users", { cache: "no-store" });
     const data = await res.json().catch(() => ({}));
     setUsers(data.users || []);
+
+    const pixelMap: Record<string, string> = {};
+    const tokenMap: Record<string, string> = {};
+
+    (data.users || []).forEach((u: User) => {
+      pixelMap[u.id] = u.pixelId || "";
+      tokenMap[u.id] = u.capiToken || "";
+    });
+
+    setPixelInputs(pixelMap);
+    setTokenInputs(tokenMap);
   }
 
   async function loadVip() {
@@ -44,23 +60,20 @@ export default function AdminPage() {
     loadVip();
   }, []);
 
-  async function updateMaxLines(id: string, value: number) {
-    if (value < 1) return;
-
-    setError("");
+  async function updateUser(id: string, data: any) {
     setLoadingId(id);
 
     const res = await fetch(`/api/admin/users/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ maxLines: value }),
+      body: JSON.stringify(data),
     });
 
-    const data = await res.json().catch(() => ({}));
+    const json = await res.json().catch(() => ({}));
     setLoadingId(null);
 
     if (!res.ok) {
-      setError(data?.error || "Error");
+      setError(json?.error || "Error");
       return;
     }
 
@@ -106,7 +119,7 @@ export default function AdminPage() {
       <div>
         <h1 className="text-xl font-semibold">Panel Master</h1>
         <p className="text-sm text-white/60">
-          Administrá usuarios y cantidad de líneas por plan.
+          Administrá usuarios y configuración avanzada.
         </p>
       </div>
 
@@ -137,7 +150,7 @@ export default function AdminPage() {
 
           <input
             type="text"
-            placeholder="landingKey opcional (ej: virgi)"
+            placeholder="landingKey opcional"
             value={landingKey}
             onChange={(e) => setLandingKey(e.target.value)}
             className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm outline-none"
@@ -162,46 +175,58 @@ export default function AdminPage() {
         </button>
       </form>
 
-      {users.length === 0 ? (
-        <p className="text-sm text-white/60">No hay usuarios todavía.</p>
-      ) : (
-        users.map((u) => (
-          <div
-            key={u.id}
-            className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4"
-          >
-            <div>
-              <div className="font-medium">{u.email}</div>
-              <div className="text-sm text-white/60">
-                Líneas permitidas: {u.maxLines}
-              </div>
-              <div className="text-sm text-white/60">
-                landingKey: {u.landingKey || "—"}
-              </div>
-            </div>
+      {users.map((u) => (
+        <div
+          key={u.id}
+          className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4"
+        >
+          <div className="font-medium">{u.email}</div>
 
-            <div className="flex gap-2">
-              <button
-                onClick={() => updateMaxLines(u.id, u.maxLines - 1)}
-                disabled={loadingId === u.id}
-                className="rounded-lg border border-white/10 px-3 py-1 text-xs cursor-pointer hover:bg-white/10 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                -1
-              </button>
-              <button
-                onClick={() => updateMaxLines(u.id, u.maxLines + 1)}
-                disabled={loadingId === u.id}
-                className="rounded-lg border border-white/10 px-3 py-1 text-xs cursor-pointer hover:bg-white/10 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                +1
-              </button>
-            </div>
+          <div className="text-sm text-white/60">
+            landingKey: {u.landingKey || "—"}
           </div>
-        ))
-      )}
+
+          <div className="text-sm text-white/60">
+            Líneas: {u.maxLines}
+          </div>
+
+          <div className="grid gap-2">
+            <input
+              placeholder="Pixel ID"
+              value={pixelInputs[u.id] || ""}
+              onChange={(e) =>
+                setPixelInputs({ ...pixelInputs, [u.id]: e.target.value })
+              }
+              className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-xs"
+            />
+
+            <input
+              placeholder="CAPI Token"
+              value={tokenInputs[u.id] || ""}
+              onChange={(e) =>
+                setTokenInputs({ ...tokenInputs, [u.id]: e.target.value })
+              }
+              className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-xs"
+            />
+
+            <button
+              onClick={() =>
+                updateUser(u.id, {
+                  pixelId: pixelInputs[u.id],
+                  capiToken: tokenInputs[u.id],
+                })
+              }
+              disabled={loadingId === u.id}
+              className="rounded-lg border border-white/10 px-3 py-2 text-xs hover:bg-white/10"
+            >
+              Guardar Pixel
+            </button>
+          </div>
+        </div>
+      ))}
 
       <div className="pt-6">
-        <h2 className="text-sm font-medium mb-2">Jugadores VIP (backup)</h2>
+        <h2 className="text-sm font-medium mb-2">Jugadores VIP</h2>
 
         {vip.length === 0 ? (
           <p className="text-sm text-white/60">Sin jugadores aún</p>

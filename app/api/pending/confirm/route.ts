@@ -14,9 +14,60 @@ async function sendPurchaseToMeta(params: {
   amount: number
   userId: string
 }) {
-  // 🔥 Placeholder listo para el próximo paso.
-  // Acá después vamos a conectar Pixel + Access Token reales por usuario.
-  // Por ahora devolvemos true para no romper el flujo actual.
+  const user = await prisma.user.findUnique({
+    where: { id: params.userId },
+    select: {
+      pixelId: true,
+      capiToken: true,
+    },
+  })
+
+  if (!user?.pixelId || !user?.capiToken) {
+    return false
+  }
+
+  const payload = {
+    data: [
+      {
+        event_name: "Purchase",
+        event_time: Math.floor(Date.now() / 1000),
+        action_source: "website",
+        event_source_url: `https://pulze.site/${params.userId}`,
+        custom_data: {
+          currency: "ARS",
+          value: params.amount,
+        },
+        custom_data_optional: {
+          code: params.code,
+          player_name: params.playerName || undefined,
+        },
+      },
+    ],
+  }
+
+  const response = await fetch(
+    `https://graph.facebook.com/v23.0/${user.pixelId}/events?access_token=${encodeURIComponent(user.capiToken)}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  )
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => "")
+    console.error("META CAPI ERROR:", text)
+    return false
+  }
+
+  const json = await response.json().catch(() => null)
+  if (!json || json.error) {
+    console.error("META CAPI JSON ERROR:", json)
+    return false
+  }
+
   return true
 }
 
