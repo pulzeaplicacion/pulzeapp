@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import crypto from "crypto"
 
 function isExpired(createdAt: Date) {
   const now = Date.now()
@@ -8,12 +9,33 @@ function isExpired(createdAt: Date) {
   return diff > 48 * 60 * 60 * 1000
 }
 
-async function sendPurchaseToMeta(params: {
-  code: string
-  playerName: string | null
-  amount: number
-  userId: string
-}) {
+function sha256(value: string) {
+  return crypto.createHash("sha256").update(value.trim().toLowerCase()).digest("hex")
+}
+
+function getClientIp(req: Request) {
+  const forwardedFor = req.headers.get("x-forwarded-for")
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0].trim()
+  }
+
+  const realIp = req.headers.get("x-real-ip")
+  if (realIp) {
+    return realIp.trim()
+  }
+
+  return null
+}
+
+async function sendPurchaseToMeta(
+  req: Request,
+  params: {
+    code: string
+    playerName: string | null
+    amount: number
+    userId: string
+  }
+) {
   const user = await prisma.user.findUnique({
     where: { id: params.userId },
     select: {
@@ -28,6 +50,21 @@ async function sendPurchaseToMeta(params: {
     return false
   }
 
+  const clientIp = getClientIp(req)
+  const clientUserAgent = req.headers.get("user-agent") || undefined
+
+  const userData: Record<string, unknown> = {
+    external_id: [sha256(params.code)],
+  }
+
+  if (clientIp) {
+    userData.client_ip_address = clientIp
+  }
+
+  if (clientUserAgent) {
+    userData.client_user_agent = clientUserAgent
+  }
+
   const payload = {
     data: [
       {
@@ -36,6 +73,7 @@ async function sendPurchaseToMeta(params: {
         action_source: "website",
         event_source_url: `https://pulze.site/${user.landingKey || params.userId}`,
         event_id: params.code,
+        user_data: userData,
         custom_data: {
           currency: "ARS",
           value: params.amount,
@@ -128,7 +166,7 @@ export async function POST(req: Request) {
       )
     }
 
-    const metaOk = await sendPurchaseToMeta({
+    const metaOk = await sendPurchaseToMeta(req, {
       code,
       playerName: playerName || null,
       amount,
