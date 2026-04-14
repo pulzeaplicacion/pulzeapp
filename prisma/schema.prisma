@@ -14,6 +14,8 @@ model User {
   role       String   @default("user")
   maxLines   Int      @default(1)
   landingKey String?  @unique
+  pixelId    String?
+  capiToken  String?
   createdAt  DateTime @default(now())
 
   lines Line[]
