@@ -34,6 +34,8 @@ async function sendPurchaseToMeta(
     playerName: string | null
     amount: number
     userId: string
+    fbp: string | null
+    fbc: string | null
   }
 ) {
   const user = await prisma.user.findUnique({
@@ -63,6 +65,14 @@ async function sendPurchaseToMeta(
 
   if (clientUserAgent) {
     userData.client_user_agent = clientUserAgent
+  }
+
+  if (params.fbp) {
+    userData.fbp = params.fbp
+  }
+
+  if (params.fbc) {
+    userData.fbc = params.fbc
   }
 
   const payload = {
@@ -108,7 +118,7 @@ async function sendPurchaseToMeta(
       return false
     }
 
-    console.error("META CAPI OK:", json)
+    console.log("META CAPI OK:", json)
     return true
   } catch {
     console.error("META CAPI PARSE ERROR:", text)
@@ -171,6 +181,8 @@ export async function POST(req: Request) {
       playerName: playerName || null,
       amount,
       userId: pending.userId,
+      fbp: pending.fbp || null,
+      fbc: pending.fbc || null,
     })
 
     if (!metaOk) {

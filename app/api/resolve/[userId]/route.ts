@@ -15,21 +15,11 @@ export async function GET(
   context: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId: landingKey } = await context.params
+    const { userId } = await context.params
+    const url = new URL(req.url)
 
-    const user = await prisma.user.findUnique({
-      where: { landingKey },
-      select: { id: true },
-    })
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "Usuario no encontrado" },
-        { status: 404 }
-      )
-    }
-
-    const userId = user.id
+    const fbp = String(url.searchParams.get("fbp") || "").trim() || null
+    const fbc = String(url.searchParams.get("fbc") || "").trim() || null
 
     const lines = await prisma.line.findMany({
       where: { userId },
@@ -79,6 +69,8 @@ export async function GET(
         code,
         userId,
         lineId: selectedLine.id,
+        fbp,
+        fbc,
       },
     })
 

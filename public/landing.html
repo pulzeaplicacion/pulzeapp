@@ -239,54 +239,84 @@
   </div>
 
   <script>
-    // Partículas
-    for(let i=0;i<60;i++){
-      const p=document.createElement("div");
-      p.className="particle";
-      p.style.top=Math.random()*100+"vh";
-      p.style.left=Math.random()*100+"vw";
-      p.style.animationDuration=(6+Math.random()*8)+"s";
-      document.body.appendChild(p);
-    }
+  // Partículas
+  for(let i=0;i<60;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.style.top=Math.random()*100+"vh";
+    p.style.left=Math.random()*100+"vw";
+    p.style.animationDuration=(6+Math.random()*8)+"s";
+    document.body.appendChild(p);
+  }
 
-    const params = new URLSearchParams(window.location.search);
-    const queryKey = params.get("key");
-    const pathKey = window.location.pathname.replace("/", "").replace("landing.html", "").replace("/", "");
-    const LANDING_KEY = queryKey || pathKey || "virgi";
+  const params = new URLSearchParams(window.location.search);
+  const queryKey = params.get("key");
+  const pathKey = window.location.pathname
+    .replace("/", "")
+    .replace("landing.html", "")
+    .replace("/", "");
+  const LANDING_KEY = queryKey || pathKey || "virgi";
 
-    const visitKey = "visit_counted_" + LANDING_KEY;
-    const clickKey = "click_counted_" + LANDING_KEY;
+  const visitKey = "visit_counted_" + LANDING_KEY;
+  const clickKey = "click_counted_" + LANDING_KEY;
 
-    if (!sessionStorage.getItem(visitKey)) {
-      fetch(`/api/track/visit?key=${LANDING_KEY}`, {
-        method: "POST"
-      });
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp("(^|;\\s*)" + name + "=([^;]+)"));
+    return match ? decodeURIComponent(match[2]) : "";
+  }
 
-      sessionStorage.setItem(visitKey, "true");
-    }
+  function getFbp() {
+    return getCookie("_fbp") || "";
+  }
 
-    let redirected=false;
-    document.addEventListener("click",e=>{
-      if(e.target.closest("#cta-btn") && !redirected){
-        redirected=true;
+  function getFbc() {
+    const existingFbc = getCookie("_fbc");
+    if (existingFbc) return existingFbc;
 
-        if (!sessionStorage.getItem(clickKey)) {
-          fetch(`/api/track/click?key=${LANDING_KEY}`, {
-            method: "POST"
-          });
+    const fbclid = params.get("fbclid");
+    if (!fbclid) return "";
 
-          sessionStorage.setItem(clickKey, "true");
-        }
+    const ts = Math.floor(Date.now() / 1000);
+    return `fb.1.${ts}.${fbclid}`;
+  }
 
-        if(window.fbq){
-          fbq('track','Contact');
-          fbq('trackCustom','WAclick');
-        }
+  const fbp = getFbp();
+  const fbc = getFbc();
 
-        setTimeout(()=>location.href=`/api/resolve/${LANDING_KEY}`,300);
-      }
+  if (!sessionStorage.getItem(visitKey)) {
+    fetch(`/api/track/visit?key=${LANDING_KEY}`, {
+      method: "POST"
     });
-  </script>
 
-</body>
-</html>
+    sessionStorage.setItem(visitKey, "true");
+  }
+
+  let redirected = false;
+  document.addEventListener("click", e => {
+    if (e.target.closest("#cta-btn") && !redirected) {
+      redirected = true;
+
+      if (!sessionStorage.getItem(clickKey)) {
+        fetch(`/api/track/click?key=${LANDING_KEY}`, {
+          method: "POST"
+        });
+
+        sessionStorage.setItem(clickKey, "true");
+      }
+
+      if (window.fbq) {
+        fbq("track", "Contact");
+        fbq("trackCustom", "WAclick");
+      }
+
+      const resolveUrl = new URL(`/api/resolve/${LANDING_KEY}`, window.location.origin);
+
+      if (fbp) resolveUrl.searchParams.set("fbp", fbp);
+      if (fbc) resolveUrl.searchParams.set("fbc", fbc);
+
+      setTimeout(() => {
+        location.href = resolveUrl.toString();
+      }, 300);
+    }
+  });
+</script>
