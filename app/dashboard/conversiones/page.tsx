@@ -163,8 +163,8 @@ export default function Page() {
   const promedio = jugadores > 0 ? total / jugadores : 0;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050507] text-white">
-      <div className="pointer-events-none absolute inset-0">
+<div className="relative min-h-screen overflow-hidden text-white">
+        <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-[-140px] h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[120px]" />
         <div className="absolute left-[10%] top-[25%] h-[240px] w-[240px] rounded-full bg-violet-600/15 blur-[120px]" />
         <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-pink-500/10 blur-[130px]" />

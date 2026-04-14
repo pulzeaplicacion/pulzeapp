@@ -113,17 +113,26 @@ export default function Page() {
       : 0;
 
   return (
-    <div>
-      <div className="flex items-start justify-between gap-4">
+    <div className="min-h-screen text-white">
+      {/* HEADER */}
+      <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">Dashboard</h1>
-          <p className="mt-2 text-white/60">Analytics base del panel</p>
+          <div className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] uppercase tracking-widest text-white/50">
+            Dashboard
+          </div>
 
-          <div className="mt-3 text-sm text-white/60">
+          <h1 className="mt-4 text-4xl font-semibold">
+            <span className="text-gradient">Panel</span> principal
+          </h1>
+
+          <p className="mt-2 text-white/60">
+            Seguimiento general de tráfico y conversiones
+          </p>
+
+          <div className="mt-3 text-sm text-white/50">
             {me ? (
               <>
-                Logueado como: <span className="text-white">{me.user.email}</span>{" "}
-                · Rol: <span className="text-white">{me.user.role}</span>
+                {me.user.email} · {me.user.role}
               </>
             ) : (
               "Cargando usuario…"
@@ -131,32 +140,30 @@ export default function Page() {
           </div>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
-        >
+        <button onClick={handleLogout} className="btn-secondary">
           Salir
         </button>
       </div>
 
+      {/* LINK */}
       {me?.user.landingKey && (
-        <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm text-white/60">Tu link de acceso</p>
+        <div className="card p-4 mb-6">
+          <p className="text-sm text-white/60">Tu link</p>
 
-          <div className="mt-2 flex items-center gap-2">
+          <div className="mt-2 flex gap-2">
             <input
               value={`https://pulze.site/${me.user.landingKey}`}
               readOnly
-              className="flex-1 rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm outline-none"
+              className="input flex-1 text-sm"
             />
 
             <button
-              onClick={() => {
+              onClick={() =>
                 navigator.clipboard.writeText(
                   `https://pulze.site/${me.user.landingKey}`
-                );
-              }}
-              className="rounded-lg border border-white/10 px-3 py-2 text-xs hover:bg-white/10"
+                )
+              }
+              className="btn-primary text-xs"
             >
               Copiar
             </button>
@@ -164,81 +171,92 @@ export default function Page() {
         </div>
       )}
 
-      <div className="mt-6 grid gap-4 md:grid-cols-5">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+      {/* MÉTRICAS */}
+      <div className="grid gap-4 md:grid-cols-5">
+        <div className="card p-4">
           <p className="text-sm text-white/60">Visitas</p>
           <p className="mt-2 text-3xl font-semibold">{track.visits}</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm text-white/60">Clicks WhatsApp</p>
+        <div className="card p-4">
+          <p className="text-sm text-white/60">Clicks</p>
           <p className="mt-2 text-3xl font-semibold">{track.clicks}</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm text-white/60">Jugadores confirmados</p>
-          <p className="mt-2 text-3xl font-semibold">{jugadoresConfirmados}</p>
+        <div className="card p-4">
+          <p className="text-sm text-white/60">Jugadores</p>
+          <p className="mt-2 text-3xl font-semibold">
+            {jugadoresConfirmados}
+          </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm text-white/60">Total jugado</p>
+        <div className="card p-4">
+          <p className="text-sm text-white/60">Total</p>
           <p className="mt-2 text-3xl font-semibold text-green-400">
             ${totalJugado.toLocaleString("es-AR")}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm text-white/60">Ticket promedio</p>
+        <div className="card p-4">
+          <p className="text-sm text-white/60">Promedio</p>
           <p className="mt-2 text-3xl font-semibold">
             ${Math.round(ticketPromedio).toLocaleString("es-AR")}
           </p>
         </div>
       </div>
 
+      {/* BLOQUES */}
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <h2 className="text-lg font-semibold">Resumen actual</h2>
-          <div className="mt-4 space-y-3 text-sm text-white/70">
-            <div className="flex items-center justify-between">
-              <span>Pendientes</span>
+        <div className="card p-5">
+          <h2 className="text-lg font-semibold mb-4">Resumen</h2>
+
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between">
+              <span className="text-white/60">Pendientes</span>
               <span className="text-yellow-400">{pendientes.length}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span>Confirmados</span>
+
+            <div className="flex justify-between">
+              <span className="text-white/60">Confirmados</span>
               <span className="text-green-400">{confirmados.length}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span>Total jugado</span>
+
+            <div className="flex justify-between">
+              <span className="text-white/60">Total</span>
               <span>${totalJugado.toLocaleString("es-AR")}</span>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <h2 className="text-lg font-semibold">Funnel base</h2>
-          <div className="mt-4 space-y-3 text-sm text-white/70">
-            <div className="flex items-center justify-between">
-              <span>Visitas → Click</span>
+        <div className="card p-5">
+          <h2 className="text-lg font-semibold mb-4">Funnel</h2>
+
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between">
+              <span className="text-white/60">Visita → Click</span>
               <span>{conversionVisitToClick}%</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span>Click → Jugador</span>
+
+            <div className="flex justify-between">
+              <span className="text-white/60">Click → Jugador</span>
               <span>{conversionClickToPlayer}%</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span>Visitas → Jugador</span>
+
+            <div className="flex justify-between">
+              <span className="text-white/60">Visita → Jugador</span>
               <span>{conversionVisitToPlayer}%</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-        <h2 className="text-lg font-semibold">Estado del panel</h2>
+      {/* ESTADO */}
+      <div className="mt-6 card p-4">
+        <h2 className="text-lg font-semibold">Estado</h2>
         <p className="mt-2 text-sm text-white/60">
           {loading
             ? "Cargando datos…"
-            : "Ahora el panel muestra métricas reales de visitas, clicks y conversiones."}
+            : "Panel funcionando con métricas reales."}
         </p>
       </div>
     </div>
