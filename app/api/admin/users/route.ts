@@ -43,6 +43,8 @@ export async function GET() {
         email: true,
         maxLines: true,
         landingKey: true,
+        pixelId: true,
+        capiToken: true,
       },
       orderBy: {
         createdAt: "asc",
@@ -111,6 +113,8 @@ export async function POST(req: Request) {
         email: true,
         maxLines: true,
         landingKey: true,
+        pixelId: true,
+        capiToken: true,
       },
     });
 
