@@ -23,10 +23,7 @@ export async function GET(
 
     const owner = await prisma.user.findFirst({
       where: {
-        OR: [
-          { id: rawParam },
-          { landingKey: rawParam },
-        ],
+        OR: [{ id: rawParam }, { landingKey: rawParam }],
       },
       select: { id: true },
     })
@@ -83,15 +80,29 @@ export async function GET(
       })
     }
 
+    // Crear pending con campos que Prisma sí reconoce seguro
     await prisma.pending.create({
       data: {
         code,
         userId,
         lineId: selectedLine.id,
-        ...(fbp ? { fbp } : {}),
-        ...(fbc ? { fbc } : {}),
-      } as any,
+      },
     })
+
+    // Guardar fbp/fbc por SQL directo para evitar el problema del Prisma Client viejo en producción
+    if (fbp || fbc) {
+      await prisma.$executeRawUnsafe(
+        `
+        UPDATE "Pending"
+        SET "fbp" = COALESCE($1, "fbp"),
+            "fbc" = COALESCE($2, "fbc")
+        WHERE "code" = $3
+        `,
+        fbp,
+        fbc,
+        code
+      )
+    }
 
     const message = `Hola, quiero un usuario. BONO: ${code}`
     const whatsappUrl = `https://wa.me/${selectedLine.number}?text=${encodeURIComponent(message)}`

@@ -176,18 +176,26 @@ export async function POST(req: Request) {
       )
     }
 
-    const pendingMeta = pending as typeof pending & {
-      fbp?: string | null
-      fbc?: string | null
-    }
+    // Leer fbp/fbc por SQL directo para evitar el problema del Prisma Client viejo en producción
+    const metaRows = await prisma.$queryRawUnsafe<Array<{ fbp: string | null; fbc: string | null }>>(
+      `
+      SELECT "fbp", "fbc"
+      FROM "Pending"
+      WHERE "code" = $1
+      LIMIT 1
+      `,
+      code
+    )
+
+    const metaRow = metaRows[0] || { fbp: null, fbc: null }
 
     const metaOk = await sendPurchaseToMeta(req, {
       code,
       playerName: playerName || null,
       amount,
       userId: pending.userId,
-      fbp: pendingMeta.fbp || null,
-      fbc: pendingMeta.fbc || null,
+      fbp: metaRow.fbp || null,
+      fbc: metaRow.fbc || null,
     })
 
     if (!metaOk) {
