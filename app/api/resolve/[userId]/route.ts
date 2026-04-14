@@ -15,11 +15,30 @@ export async function GET(
   context: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = await context.params
+    const { userId: rawParam } = await context.params
     const url = new URL(req.url)
 
     const fbp = String(url.searchParams.get("fbp") || "").trim() || null
     const fbc = String(url.searchParams.get("fbc") || "").trim() || null
+
+    const owner = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { id: rawParam },
+          { landingKey: rawParam },
+        ],
+      },
+      select: { id: true },
+    })
+
+    if (!owner) {
+      return NextResponse.json(
+        { error: "Usuario no encontrado" },
+        { status: 404 }
+      )
+    }
+
+    const userId = owner.id
 
     const lines = await prisma.line.findMany({
       where: { userId },
