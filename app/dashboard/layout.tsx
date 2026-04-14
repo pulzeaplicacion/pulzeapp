@@ -68,15 +68,10 @@ export default function DashboardLayout({
 
           <div className="relative z-10 flex h-full flex-col">
             <div>
-              <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-white/45">
-                Pulze
-              </div>
-
-              <h2 className="mt-4 text-3xl font-semibold leading-none">
-                <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-violet-400 bg-clip-text text-transparent">
-                  PULZE
-                </span>
-              </h2>
+              
+              <h2 className="mt-4 text-3xl font-semibold leading-none text-white">
+  PULZE
+</h2>
 
               <p className="mt-3 text-sm text-white/45">
                 Panel premium de gestión y conversiones.
