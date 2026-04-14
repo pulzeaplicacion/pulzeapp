@@ -19,10 +19,12 @@ async function sendPurchaseToMeta(params: {
     select: {
       pixelId: true,
       capiToken: true,
+      landingKey: true,
     },
   })
 
   if (!user?.pixelId || !user?.capiToken) {
+    console.error("META ERROR: falta pixelId o capiToken")
     return false
   }
 
@@ -32,14 +34,11 @@ async function sendPurchaseToMeta(params: {
         event_name: "Purchase",
         event_time: Math.floor(Date.now() / 1000),
         action_source: "website",
-        event_source_url: `https://pulze.site/${params.userId}`,
+        event_source_url: `https://pulze.site/${user.landingKey || params.userId}`,
+        event_id: params.code,
         custom_data: {
           currency: "ARS",
           value: params.amount,
-        },
-        custom_data_optional: {
-          code: params.code,
-          player_name: params.playerName || undefined,
         },
       },
     ],
@@ -56,19 +55,27 @@ async function sendPurchaseToMeta(params: {
     }
   )
 
+  const text = await response.text().catch(() => "")
+
   if (!response.ok) {
-    const text = await response.text().catch(() => "")
     console.error("META CAPI ERROR:", text)
     return false
   }
 
-  const json = await response.json().catch(() => null)
-  if (!json || json.error) {
-    console.error("META CAPI JSON ERROR:", json)
+  try {
+    const json = JSON.parse(text)
+
+    if (json?.error) {
+      console.error("META CAPI JSON ERROR:", json)
+      return false
+    }
+
+    console.error("META CAPI OK:", json)
+    return true
+  } catch {
+    console.error("META CAPI PARSE ERROR:", text)
     return false
   }
-
-  return true
 }
 
 export async function POST(req: Request) {
