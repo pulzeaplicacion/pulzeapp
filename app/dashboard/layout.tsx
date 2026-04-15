@@ -4,18 +4,39 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function NavItem({ href, label }: { href: string; label: string }) {
+function NavItem({
+  href,
+  label,
+  mobile = false,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  mobile?: boolean;
+  onClick?: () => void;
+}) {
   const pathname = usePathname();
   const active = pathname === href;
 
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={[
-        "group block rounded-2xl px-4 py-3 text-sm transition-all duration-200",
-        active
-          ? "border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white shadow-[0_0_30px_rgba(217,70,239,0.22)]"
-          : "border border-transparent bg-white/[0.03] text-white/70 hover:border-white/10 hover:bg-white/[0.06] hover:text-white",
+        "group block transition-all duration-200",
+        mobile
+          ? [
+              "rounded-2xl px-4 py-3 text-base",
+              active
+                ? "border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white shadow-[0_0_30px_rgba(217,70,239,0.22)]"
+                : "border border-white/10 bg-white/[0.03] text-white/75 hover:bg-white/[0.06]",
+            ].join(" ")
+          : [
+              "rounded-2xl px-4 py-3 text-sm",
+              active
+                ? "border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white shadow-[0_0_30px_rgba(217,70,239,0.22)]"
+                : "border border-transparent bg-white/[0.03] text-white/70 hover:border-white/10 hover:bg-white/[0.06] hover:text-white",
+            ].join(" "),
       ].join(" ")}
     >
       <span className="flex items-center justify-between">
@@ -46,6 +67,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [me, setMe] = useState<MeResponse | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/me")
@@ -59,8 +81,8 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-transparent text-white">
       <div className="flex min-h-screen">
-        {/* Sidebar */}
-        <aside className="relative w-72 border-r border-white/10 bg-black/30 p-5 backdrop-blur-2xl">
+        {/* Sidebar desktop */}
+        <aside className="relative hidden w-72 border-r border-white/10 bg-black/30 p-5 backdrop-blur-2xl lg:block">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute left-1/2 top-[-120px] h-[220px] w-[220px] -translate-x-1/2 rounded-full bg-fuchsia-600/20 blur-[100px]" />
             <div className="absolute left-[10%] top-[35%] h-[180px] w-[180px] rounded-full bg-violet-600/10 blur-[90px]" />
@@ -68,10 +90,9 @@ export default function DashboardLayout({
 
           <div className="relative z-10 flex h-full flex-col">
             <div>
-              
-              <h2 className="mt-4 text-3xl font-semibold leading-none text-white">
-  PULZE
-</h2>
+              <h2 className="mt-2 text-3xl font-semibold leading-none text-white">
+                PULZE
+              </h2>
 
               <p className="mt-3 text-sm text-white/45">
                 Panel premium de gestión y conversiones.
@@ -103,8 +124,71 @@ export default function DashboardLayout({
           </div>
         </aside>
 
-        {/* Contenido */}
-        <main className="flex-1 p-6 md:p-8">{children}</main>
+        {/* Main area */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          {/* Mobile topbar */}
+          <header className="sticky top-0 z-40 border-b border-white/10 bg-black/40 backdrop-blur-xl lg:hidden">
+            <div className="flex items-center justify-between px-4 py-4">
+              <div>
+                <div className="text-2xl font-semibold leading-none text-white">
+                  PULZE
+                </div>
+                <div className="mt-1 text-xs text-white/45">
+                  {me?.user?.email || "Cargando..."}
+                </div>
+              </div>
+
+              <button
+                onClick={() => setMobileOpen((v) => !v)}
+                className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-white/80"
+              >
+                {mobileOpen ? "Cerrar" : "Menú"}
+              </button>
+            </div>
+
+            {mobileOpen && (
+              <div className="border-t border-white/10 px-4 py-4">
+                <div className="space-y-2">
+                  <NavItem
+                    href="/dashboard"
+                    label="Dashboard"
+                    mobile
+                    onClick={() => setMobileOpen(false)}
+                  />
+                  <NavItem
+                    href="/dashboard/conversiones"
+                    label="Conversiones"
+                    mobile
+                    onClick={() => setMobileOpen(false)}
+                  />
+                  <NavItem
+                    href="/dashboard/agenda"
+                    label="Agenda"
+                    mobile
+                    onClick={() => setMobileOpen(false)}
+                  />
+                  <NavItem
+                    href="/dashboard/lineas"
+                    label="Líneas"
+                    mobile
+                    onClick={() => setMobileOpen(false)}
+                  />
+                  {isAdmin && (
+                    <NavItem
+                      href="/dashboard/admin"
+                      label="Panel Master"
+                      mobile
+                      onClick={() => setMobileOpen(false)}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+          </header>
+
+          {/* Content */}
+          <main className="min-w-0 flex-1 p-4 md:p-6 lg:p-8">{children}</main>
+        </div>
       </div>
     </div>
   );
