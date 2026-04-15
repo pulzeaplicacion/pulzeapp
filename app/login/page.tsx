@@ -31,68 +31,78 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="pulze-bg relative flex min-h-screen items-center justify-center overflow-hidden px-4">
-      {/* Glow decorativo */}
-      <div className="pointer-events-none absolute left-[-80px] top-[-80px] h-56 w-56 rounded-full bg-fuchsia-600/20 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-[-100px] right-[-80px] h-64 w-64 rounded-full bg-violet-600/20 blur-3xl" />
+  <main className="pulze-bg relative flex min-h-screen items-center justify-center overflow-hidden px-3">
+    {/* Glow (igual pero más chico) */}
+    <div className="pointer-events-none absolute left-[-80px] top-[-80px] h-40 w-40 rounded-full bg-fuchsia-600/20 blur-3xl sm:h-56 sm:w-56" />
+    <div className="pointer-events-none absolute bottom-[-100px] right-[-80px] h-48 w-48 rounded-full bg-violet-600/20 blur-3xl sm:h-64 sm:w-64" />
 
-      <div className="relative z-10 w-full max-w-md">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-2xl shadow-[0_0_40px_rgba(168,85,247,0.12)] sm:p-6">
-          <div className="mb-6">
-            <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-600 to-violet-600 text-sm font-semibold text-white shadow-lg shadow-fuchsia-950/30">
-              P
-            </div>
-
-            <h1 className="text-[24px] font-semibold tracking-tight text-white sm:text-[28px]">
-              Bienvenido a PULZE
-            </h1>
-
-            <p className="mt-2 text-[12px] text-white/55 sm:text-[13px]">
-              Ingresá a tu panel para gestionar conversiones, agenda y líneas.
-            </p>
+    <div className="relative z-10 w-full max-w-[300px] sm:max-w-md">
+      <div className="rounded-[22px] border border-white/10 bg-white/5 p-3 backdrop-blur-2xl shadow-[0_0_30px_rgba(168,85,247,0.10)] sm:p-6">
+        
+        {/* Header */}
+        <div className="mb-4 sm:mb-6 text-center">
+          <div className="mx-auto mb-3 inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-600 to-violet-600 text-[11px] font-semibold text-white shadow-lg shadow-fuchsia-950/30 sm:h-11 sm:w-11 sm:text-sm">
+            P
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <div>
-              <label className="mb-1.5 block text-[11px] font-medium text-white/65">
-                Email
-              </label>
-              <input
-                type="email"
-                className="pulze-input"
-                placeholder="tuemail@pulze.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
+          <h1 className="text-[18px] font-semibold text-white sm:text-[28px]">
+            PULZE
+          </h1>
 
-            <div>
-              <label className="mb-1.5 block text-[11px] font-medium text-white/65">
-                Contraseña
-              </label>
-              <input
-                type="password"
-                className="pulze-input"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+          <p className="mt-1 text-[11px] text-white/60 sm:text-[13px]">
+            Acceso al panel
+          </p>
+        </div>
 
-            <button type="submit" className="pulze-btn mt-2 w-full">
-              Ingresar al panel
-            </button>
-          </form>
-
-          <div className="mt-5 border-t border-white/10 pt-4">
-            <p className="text-center text-[11px] text-white/35">
-              PULZE · Conversiones para operación interna
-            </p>
+        {/* FORM MÁS DESTACADO */}
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-2.5 rounded-2xl border border-fuchsia-500/30 bg-black/30 p-3 shadow-[0_0_25px_rgba(217,70,239,0.12)]"
+        >
+          {/* Email */}
+          <div>
+            <label className="mb-1 block text-[10px] font-medium text-white/80">
+              Email
+            </label>
+            <input
+              type="email"
+              className="w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-[13px] text-white outline-none transition focus:border-fuchsia-500 focus:ring-2 focus:ring-fuchsia-500/30"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
+
+          {/* Password */}
+          <div>
+            <label className="mb-1 block text-[10px] font-medium text-white/80">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              className="w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-[13px] text-white outline-none transition focus:border-fuchsia-500 focus:ring-2 focus:ring-fuchsia-500/30"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* BOTÓN MÁS PROTAGONISTA */}
+          <button
+            type="submit"
+            className="mt-2 w-full rounded-lg bg-gradient-to-r from-fuchsia-600 to-violet-600 py-2 text-[13px] font-semibold text-white shadow-lg shadow-fuchsia-900/40 transition hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Ingresar
+          </button>
+        </form>
+
+        {/* Footer */}
+        <div className="mt-3 text-center">
+          <p className="text-[10px] text-white/35">
+            Panel interno
+          </p>
         </div>
       </div>
-    </main>
-  );
-}
+    </div>
+  </main>
+);
