@@ -41,14 +41,11 @@ export default function LoginPage() {
           
           {/* Header */}
           <div className="mb-4 text-center sm:mb-6">
-            <div className="mx-auto mb-3 inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-600 to-violet-600 text-[11px] font-semibold text-white shadow-lg shadow-fuchsia-950/30 sm:h-11 sm:w-11 sm:text-sm">
-              P
-            </div>
-
-            <h1 className="text-[18px] font-semibold text-white sm:text-[28px]">
-              PULZE
-            </h1>
-
+<img
+  src="/logo.png"
+  alt="Pulze"
+  className="mx-auto mb-3 h-11 w-11 object-contain sm:h-14 sm:w-14"
+/>
             <p className="mt-1 text-[11px] text-white/60 sm:text-[13px]">
               Acceso al panel
             </p>
