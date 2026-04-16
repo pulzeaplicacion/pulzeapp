@@ -41,7 +41,7 @@ export default function LoginPage() {
           
           <div className="mb-4 text-center sm:mb-6">
   <img
-    src="/logo.svg"
+    src="/logo.png"
     alt="Pulze"
     className="mx-auto mb-3 h-16 object-contain sm:h-14"
   />
