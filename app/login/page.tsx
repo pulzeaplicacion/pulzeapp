@@ -39,18 +39,17 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-[300px] sm:max-w-md">
         <div className="rounded-[22px] border border-white/10 bg-white/5 p-3 backdrop-blur-2xl shadow-[0_0_30px_rgba(168,85,247,0.10)] sm:p-6">
           
-          {/* Header */}
           <div className="mb-4 text-center sm:mb-6">
-<img
-  src="/logo.svg"
-  alt="Pulze"
-  className="mx-auto mb-3 h-10 object-contain sm:h-14"
-/>
-            <p className="mt-1 text-[11px] text-white/60 sm:text-[13px]">
-              Acceso al panel
-            </p>
-          </div>
+  <img
+    src="/logo.svg"
+    alt="Pulze"
+    className="mx-auto mb-3 h-16 object-contain sm:h-14"
+  />
 
+  <p className="mt-1 text-[11px] text-white/60 sm:text-[13px]">
+    Acceso al panel
+  </p>
+</div>
           {/* FORM DESTACADO */}
           <form
             onSubmit={handleSubmit}
