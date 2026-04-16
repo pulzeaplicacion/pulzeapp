@@ -43,7 +43,7 @@ export default function LoginPage() {
   <img
     src="/logo.png"
     alt="Pulze"
-    className="mx-auto mb-3 h-16 object-contain sm:h-14"
+    className="mx-auto mb-2 h-20 object-contain sm:h-40"
   />
 
   <p className="mt-1 text-[11px] text-white/60 sm:text-[13px]">
