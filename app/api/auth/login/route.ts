@@ -1,30 +1,64 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
-import { prisma } from "../../../../lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => null);
+  try {
+    const body = await req.json();
+    const email = body.email?.trim().toLowerCase();
+    const password = body.password?.trim();
 
-  const email = String(body?.email || "").trim().toLowerCase();
-  const password = String(body?.password || "");
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: "Faltan email o contraseña" },
+        { status: 400 }
+      );
+    }
 
-  if (!email || !password) {
-    return NextResponse.json({ error: "Faltan datos" }, { status: 400 });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Usuario no encontrado" },
+        { status: 401 }
+      );
+    }
+
+    const passwordOk = await bcrypt.compare(password, user.password);
+
+    if (!passwordOk) {
+      return NextResponse.json(
+        { error: "Contraseña incorrecta" },
+        { status: 401 }
+      );
+    }
+
+    const cookieStore = await cookies();
+
+    cookieStore.set("auth", user.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    return NextResponse.json({
+      ok: true,
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("LOGIN_ERROR:", error);
+
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
-
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) return NextResponse.json({ error: "Credenciales inválidas" }, { status: 401 });
-
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return NextResponse.json({ error: "Credenciales inválidas" }, { status: 401 });
-
-  const res = NextResponse.json({ ok: true });
-  res.cookies.set("auth", user.id, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-  });
-  return res;
 }
