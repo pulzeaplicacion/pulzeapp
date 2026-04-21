@@ -160,31 +160,6 @@ export default function Page() {
           </button>
         </div>
 
-        {me?.user.landingKey && (
-          <div className="mb-6 rounded-3xl border border-white/10 bg-white/[0.04] p-4 shadow-[0_0_28px_rgba(168,85,247,0.06)] backdrop-blur-xl sm:p-5">
-            <p className="text-sm text-white/60">Tu link de acceso</p>
-
-            <div className="mt-3 flex flex-col gap-2 md:flex-row">
-              <input
-                value={`https://pulze.site/${me.user.landingKey}`}
-                readOnly
-                className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none"
-              />
-
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    `https://pulze.site/${me.user.landingKey}`
-                  );
-                }}
-                className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-5 py-3 text-sm font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02] hover:shadow-[0_0_26px_rgba(217,70,239,0.28)]"
-              >
-                Copiar
-              </button>
-            </div>
-          </div>
-        )}
-
         <div className="mb-6 grid gap-3">
           <div className="grid grid-cols-3 gap-3">
             <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-3 text-center backdrop-blur-xl shadow-[0_0_18px_rgba(168,85,247,0.06)] sm:p-4">
@@ -307,6 +282,39 @@ export default function Page() {
             </div>
           </div>
         </div>
+
+        {me?.user.landingKey && (
+          <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-4 shadow-[0_0_28px_rgba(168,85,247,0.06)] backdrop-blur-xl sm:mt-10 sm:p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-medium text-white/75">
+                Tu link de acceso
+              </p>
+
+              <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] text-white/40">
+                Landing
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-2 md:flex-row">
+              <input
+                value={`https://pulze.site/${me.user.landingKey}`}
+                readOnly
+                className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none"
+              />
+
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `https://pulze.site/${me.user.landingKey}`
+                  );
+                }}
+                className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-5 py-3 text-sm font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02] hover:shadow-[0_0_26px_rgba(217,70,239,0.28)]"
+              >
+                Copiar
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
