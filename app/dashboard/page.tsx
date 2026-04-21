@@ -113,8 +113,14 @@ export default function Page() {
       : 0;
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white">
-      <div className="relative z-10">
+  <div className="relative min-h-screen overflow-hidden text-white">
+    <div className="pointer-events-none absolute inset-0">
+      <div className="absolute left-1/2 top-[-140px] h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[120px]" />
+      <div className="absolute left-[10%] top-[25%] h-[240px] w-[240px] rounded-full bg-violet-600/15 blur-[120px]" />
+      <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-pink-500/10 blur-[130px]" />
+    </div>
+
+    <div className="relative z-10">
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
             <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-white/45 backdrop-blur-sm">
@@ -123,10 +129,10 @@ export default function Page() {
 
             <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-none md:text-5xl">
               <span className="bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
-                Vista general de tu
+                PANEL
               </span>{" "}
               <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-violet-400 bg-clip-text text-transparent">
-                rendimiento
+                PULZE
               </span>
             </h1>
 
