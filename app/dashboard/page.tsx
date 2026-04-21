@@ -94,9 +94,6 @@ export default function Page() {
 
   const jugadoresConfirmados = confirmados.length;
 
-  const ticketPromedio =
-    jugadoresConfirmados > 0 ? totalJugado / jugadoresConfirmados : 0;
-
   const conversionClickToPlayer =
     track.clicks > 0
       ? Math.round((jugadoresConfirmados / track.clicks) * 100)
@@ -113,14 +110,14 @@ export default function Page() {
       : 0;
 
   return (
-  <div className="relative min-h-screen overflow-hidden text-white">
-    <div className="pointer-events-none absolute inset-0">
-      <div className="absolute left-1/2 top-[-140px] h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[120px]" />
-      <div className="absolute left-[10%] top-[25%] h-[240px] w-[240px] rounded-full bg-violet-600/15 blur-[120px]" />
-      <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-pink-500/10 blur-[130px]" />
-    </div>
+    <div className="relative min-h-screen overflow-hidden text-white">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-[-140px] h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[120px]" />
+        <div className="absolute left-[10%] top-[25%] h-[240px] w-[240px] rounded-full bg-violet-600/15 blur-[120px]" />
+        <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-pink-500/10 blur-[130px]" />
+      </div>
 
-    <div className="relative z-10">
+      <div className="relative z-10">
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
             <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-white/45 backdrop-blur-sm">
@@ -135,11 +132,6 @@ export default function Page() {
                 PULZE
               </span>
             </h1>
-
-            <p className="mt-4 max-w-2xl text-sm text-white/55 md:text-base">
-              Seguimiento de tráfico, conversiones y resultados con una vista
-              clara y premium del panel.
-            </p>
 
             <div className="mt-3 text-sm text-white/50">
               {me ? (
@@ -185,45 +177,22 @@ export default function Page() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-            <p className="text-sm text-white/50">Visitas</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
-              {track.visits}
-            </p>
-            <div className="mt-3 h-px bg-gradient-to-r from-fuchsia-500/40 to-transparent" />
+        <div className="mb-6 grid grid-cols-3 gap-3">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-center backdrop-blur-xl shadow-[0_0_25px_rgba(168,85,247,0.08)]">
+            <p className="text-3xl font-semibold text-white">{track.visits}</p>
+            <p className="mt-1 text-[10px] text-white/45">Visitas</p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-            <p className="text-sm text-white/50">Clicks WhatsApp</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
-              {track.clicks}
-            </p>
-            <div className="mt-3 h-px bg-gradient-to-r from-pink-500/40 to-transparent" />
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-center backdrop-blur-xl shadow-[0_0_25px_rgba(168,85,247,0.08)]">
+            <p className="text-3xl font-semibold text-white">{track.clicks}</p>
+            <p className="mt-1 text-[10px] text-white/45">Clicks</p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-            <p className="text-sm text-white/50">Jugadores confirmados</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-center backdrop-blur-xl shadow-[0_0_25px_rgba(168,85,247,0.08)]">
+            <p className="text-3xl font-semibold text-white">
               {jugadoresConfirmados}
             </p>
-            <div className="mt-3 h-px bg-gradient-to-r from-violet-500/40 to-transparent" />
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-            <p className="text-sm text-white/50">Total jugado</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-green-400">
-              ${totalJugado.toLocaleString("es-AR")}
-            </p>
-            <div className="mt-3 h-px bg-gradient-to-r from-emerald-500/40 to-transparent" />
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-            <p className="text-sm text-white/50">Ticket promedio</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
-              ${Math.round(ticketPromedio).toLocaleString("es-AR")}
-            </p>
-            <div className="mt-3 h-px bg-gradient-to-r from-cyan-500/40 to-transparent" />
+            <p className="mt-1 text-[10px] text-white/45">Jugadores</p>
           </div>
         </div>
 
@@ -277,15 +246,6 @@ export default function Page() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-          <h2 className="text-lg font-semibold text-white">Estado del panel</h2>
-          <p className="mt-2 text-sm text-white/60">
-            {loading
-              ? "Cargando datos…"
-              : "Ahora el panel muestra métricas reales de visitas, clicks y conversiones."}
-          </p>
         </div>
       </div>
     </div>
