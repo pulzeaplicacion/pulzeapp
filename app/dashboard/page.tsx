@@ -285,23 +285,23 @@ export default function Page() {
             <div className="mb-4 flex items-center gap-3">
               <div className="h-2.5 w-2.5 rounded-full bg-fuchsia-400 shadow-[0_0_14px_rgba(217,70,239,0.8)]" />
               <h2 className="text-lg font-semibold text-white sm:text-xl">
-                Funnel base
+                Embudo de conversión
               </h2>
             </div>
 
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-white/60">Visitas → Click</span>
+                <span className="text-white/60">Landing → WhatsApp</span>
                 <span className="text-white">{conversionVisitToClick}%</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-white/60">Click → Jugador</span>
+                <span className="text-white/60">WhatsApp → Jugador</span>
                 <span className="text-white">{conversionClickToPlayer}%</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-white/60">Visitas → Jugador</span>
+                <span className="text-white/60">Landing → Jugador</span>
                 <span className="text-white">{conversionVisitToPlayer}%</span>
               </div>
             </div>
