@@ -31,6 +31,7 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmingCode, setConfirmingCode] = useState("");
+  const [rejectingCode, setRejectingCode] = useState("");
   const [selectedCode, setSelectedCode] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [amount, setAmount] = useState("");
@@ -124,6 +125,32 @@ export default function Page() {
       alert(err instanceof Error ? err.message : "Error interno");
     } finally {
       setConfirmingCode("");
+    }
+  }
+
+  async function handleReject(code: string) {
+    try {
+      setRejectingCode(code);
+
+      const res = await fetch("/api/pending/reject", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Error rechazando");
+      }
+
+      await loadPending();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Error interno");
+    } finally {
+      setRejectingCode("");
     }
   }
 
@@ -293,40 +320,73 @@ export default function Page() {
 
           {!loading && !error && pendientes.length > 0 && (
             <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_0_28px_rgba(217,70,239,0.06)] backdrop-blur-xl">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[760px] text-sm">
-                  <thead className="bg-white/[0.03] text-white/60">
+              <div className="overflow-x-hidden">
+                <table className="w-full table-fixed text-[11px] sm:text-sm">
+                  <thead className="bg-white/[0.03] text-white/55">
                     <tr className="text-left">
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Bono</th>
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Línea</th>
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Fecha</th>
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Acción</th>
+                      <th className="w-[26%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Bono
+                      </th>
+                      <th className="w-[18%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Línea
+                      </th>
+                      <th className="w-[26%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Fecha
+                      </th>
+                      <th className="w-[30%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Acción
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {pendientes.map((item) => (
                       <tr
                         key={item.id}
-                        className="border-t border-white/10 transition hover:bg-white/[0.03]"
+                        className="border-t border-white/10 align-middle transition hover:bg-white/[0.03]"
                       >
-                        <td className="px-4 py-3 sm:px-5 sm:py-4">
-                          <span className="rounded-full border border-fuchsia-400/20 bg-fuchsia-500/10 px-3 py-1 font-semibold text-fuchsia-200">
+                        <td className="px-2 py-2 sm:px-4 sm:py-3">
+                          <span className="inline-flex max-w-full truncate rounded-full border border-fuchsia-400/20 bg-fuchsia-500/10 px-2 py-0.5 text-[10px] font-semibold text-fuchsia-200 sm:px-3 sm:py-1 sm:text-xs">
                             {item.code}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-white/70 sm:px-5 sm:py-4">
+
+                        <td className="truncate px-2 py-2 text-white/70 sm:px-4 sm:py-3">
                           {item.line?.name || item.lineId}
                         </td>
-                        <td className="px-4 py-3 text-white/55 sm:px-5 sm:py-4">
-                          {new Date(item.createdAt).toLocaleString("es-AR")}
+
+                        <td className="px-2 py-2 text-[10px] leading-tight text-white/55 sm:px-4 sm:py-3 sm:text-xs">
+                          {new Date(item.createdAt).toLocaleDateString("es-AR")}
+                          <br className="sm:hidden" />
+                          <span className="sm:ml-1">
+                            {new Date(item.createdAt).toLocaleTimeString(
+                              "es-AR",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )}
+                          </span>
                         </td>
-                        <td className="px-4 py-3 sm:px-5 sm:py-4">
-                          <button
-                            onClick={() => openConfirmModal(item.code)}
-                            className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-3 py-1.5 text-xs font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02] hover:shadow-[0_0_26px_rgba(217,70,239,0.28)] sm:px-4 sm:py-2 sm:text-sm"
-                          >
-                            Confirmar
-                          </button>
+
+                        <td className="px-2 py-2 sm:px-4 sm:py-3">
+                          <div className="flex flex-col gap-1 sm:flex-row">
+                            <button
+                              onClick={() => openConfirmModal(item.code)}
+                              className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-2 py-1 text-[10px] font-medium text-white shadow-[0_0_14px_rgba(217,70,239,0.18)] transition hover:scale-[1.02] sm:px-3 sm:py-1.5 sm:text-xs"
+                            >
+                              Confirmar
+                            </button>
+
+                            <button
+                              onClick={() => handleReject(item.code)}
+                              disabled={rejectingCode === item.code}
+                              className="rounded-full border border-white/10 bg-white/[0.05] px-2 py-1 text-[10px] font-medium text-white/75 transition hover:bg-white/[0.08] hover:text-white disabled:opacity-50 sm:px-3 sm:py-1.5 sm:text-xs"
+                            >
+                              {rejectingCode === item.code
+                                ? "Rechazando..."
+                                : "Rechazar"}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -353,15 +413,25 @@ export default function Page() {
 
           {!loading && !error && confirmados.length > 0 && (
             <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_0_28px_rgba(139,92,246,0.06)] backdrop-blur-xl">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[860px] text-sm">
-                  <thead className="bg-white/[0.03] text-white/60">
+              <div className="overflow-x-hidden">
+                <table className="w-full table-fixed text-[11px] sm:text-sm">
+                  <thead className="bg-white/[0.03] text-white/55">
                     <tr className="text-left">
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Bono</th>
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Línea</th>
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Jugador</th>
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Monto</th>
-                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Fecha</th>
+                      <th className="w-[18%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Bono
+                      </th>
+                      <th className="w-[18%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Línea
+                      </th>
+                      <th className="w-[22%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Jugador
+                      </th>
+                      <th className="w-[18%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Monto
+                      </th>
+                      <th className="w-[24%] px-2 py-2 font-medium sm:px-4 sm:py-3">
+                        Fecha
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -370,24 +440,38 @@ export default function Page() {
                         key={item.id}
                         className="border-t border-white/10 transition hover:bg-white/[0.03]"
                       >
-                        <td className="px-4 py-3 sm:px-5 sm:py-4">
-                          <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 font-semibold text-emerald-200">
+                        <td className="px-2 py-2 sm:px-4 sm:py-3">
+                          <span className="inline-flex max-w-full truncate rounded-full border border-emerald-400/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-200 sm:px-3 sm:py-1 sm:text-xs">
                             {item.code}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-white/70 sm:px-5 sm:py-4">
+
+                        <td className="truncate px-2 py-2 text-white/70 sm:px-4 sm:py-3">
                           {item.line?.name || item.lineId}
                         </td>
-                        <td className="px-4 py-3 text-white/70 sm:px-5 sm:py-4">
+
+                        <td className="truncate px-2 py-2 text-white/70 sm:px-4 sm:py-3">
                           {item.playerName || "—"}
                         </td>
-                        <td className="px-4 py-3 font-medium text-white sm:px-5 sm:py-4">
+
+                        <td className="px-2 py-2 font-medium text-white sm:px-4 sm:py-3">
                           {item.amount
                             ? `$${item.amount.toLocaleString("es-AR")}`
                             : "—"}
                         </td>
-                        <td className="px-4 py-3 text-white/55 sm:px-5 sm:py-4">
-                          {new Date(item.createdAt).toLocaleString("es-AR")}
+
+                        <td className="px-2 py-2 text-[10px] leading-tight text-white/55 sm:px-4 sm:py-3 sm:text-xs">
+                          {new Date(item.createdAt).toLocaleDateString("es-AR")}
+                          <br className="sm:hidden" />
+                          <span className="sm:ml-1">
+                            {new Date(item.createdAt).toLocaleTimeString(
+                              "es-AR",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )}
+                          </span>
                         </td>
                       </tr>
                     ))}
