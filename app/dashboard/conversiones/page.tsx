@@ -557,47 +557,47 @@ export default function Page() {
 
       {selectedCode && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0a0a10] p-5 shadow-[0_0_60px_rgba(217,70,239,0.16)] sm:p-6">
-            <div className="pointer-events-none absolute left-1/2 top-[-80px] h-40 w-40 -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[80px]" />
+          <div className="relative w-full max-w-[340px] overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a10] p-4 shadow-[0_0_60px_rgba(217,70,239,0.16)] sm:max-w-md sm:p-5">
+            <div className="pointer-events-none absolute left-1/2 top-[-80px] h-32 w-32 -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[70px] sm:h-40 sm:w-40 sm:blur-[80px]" />
 
             <div className="relative z-10">
-              <div className="inline-flex rounded-full border border-fuchsia-400/20 bg-fuchsia-500/10 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-fuchsia-200 sm:text-[11px]">
+              <div className="inline-flex rounded-full border border-fuchsia-400/20 bg-fuchsia-500/10 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-fuchsia-200">
                 Confirmación
               </div>
 
-              <h2 className="mt-4 text-xl font-semibold sm:text-2xl">
+              <h2 className="mt-3 text-lg font-semibold sm:mt-4 sm:text-xl">
                 Confirmar bono{" "}
                 <span className="bg-gradient-to-r from-fuchsia-400 to-violet-400 bg-clip-text text-transparent">
                   {selectedCode}
                 </span>
               </h2>
 
-              <div className="mt-5 sm:mt-6">
-                <label className="mb-2 block text-sm text-white/65">
+              <div className="mt-4 sm:mt-5">
+                <label className="mb-1.5 block text-xs text-white/65 sm:mb-2 sm:text-sm">
                   Jugador / Apodo
                 </label>
                 <input
                   type="text"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06]"
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
                 />
               </div>
 
-              <div className="mt-4">
-                <label className="mb-2 block text-sm text-white/65">
+              <div className="mt-3 sm:mt-4">
+                <label className="mb-1.5 block text-xs text-white/65 sm:mb-2 sm:text-sm">
                   Monto
                 </label>
                 <input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06]"
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
                 />
               </div>
 
-              <div className="mt-4">
-                <label className="mb-2 block text-sm text-white/65">
+              <div className="mt-3 sm:mt-4">
+                <label className="mb-1.5 block text-xs text-white/65 sm:mb-2 sm:text-sm">
                   Teléfono
                 </label>
                 <input
@@ -605,14 +605,14 @@ export default function Page() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Ej: 3411234567"
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06]"
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
                 />
               </div>
 
-              <div className="mt-5 flex gap-3 sm:mt-6">
+              <div className="mt-4 flex gap-2.5 sm:mt-5 sm:gap-3">
                 <button
                   onClick={closeConfirmModal}
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white/75 transition hover:bg-white/[0.06] hover:text-white"
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-white/75 transition hover:bg-white/[0.06] hover:text-white"
                 >
                   Cancelar
                 </button>
@@ -620,7 +620,7 @@ export default function Page() {
                 <button
                   onClick={handleConfirm}
                   disabled={confirmingCode === selectedCode}
-                  className="w-full rounded-2xl border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-3 font-medium text-white shadow-[0_0_24px_rgba(217,70,239,0.24)] transition hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(217,70,239,0.3)] disabled:opacity-50"
+                  className="w-full rounded-2xl border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-2.5 text-sm font-medium text-white shadow-[0_0_24px_rgba(217,70,239,0.24)] transition hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(217,70,239,0.3)] disabled:opacity-50"
                 >
                   {confirmingCode === selectedCode
                     ? "Confirmando..."
@@ -634,26 +634,26 @@ export default function Page() {
 
       {rejectCode && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0a0a10] p-5 shadow-[0_0_60px_rgba(217,70,239,0.16)] sm:p-6">
-            <div className="pointer-events-none absolute left-1/2 top-[-80px] h-40 w-40 -translate-x-1/2 rounded-full bg-fuchsia-600/20 blur-[80px]" />
+          <div className="relative w-full max-w-[340px] overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a10] p-4 shadow-[0_0_60px_rgba(217,70,239,0.16)] sm:max-w-md sm:p-5">
+            <div className="pointer-events-none absolute left-1/2 top-[-80px] h-32 w-32 -translate-x-1/2 rounded-full bg-fuchsia-600/20 blur-[70px] sm:h-40 sm:w-40 sm:blur-[80px]" />
 
             <div className="relative z-10">
-              <div className="inline-flex rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-white/60 sm:text-[11px]">
+              <div className="inline-flex rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-white/60">
                 Rechazar
               </div>
 
-              <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">
+              <h2 className="mt-3 text-lg font-semibold text-white sm:mt-4 sm:text-xl">
                 ¿Seguro que queres rechazar este cliente?
               </h2>
 
-              <p className="mt-3 text-sm text-white/55">
+              <p className="mt-2 text-xs text-white/55 sm:mt-3 sm:text-sm">
                 Esta acción eliminará el pendiente seleccionado.
               </p>
 
-              <div className="mt-6 flex gap-3">
+              <div className="mt-4 flex gap-2.5 sm:mt-6 sm:gap-3">
                 <button
                   onClick={closeRejectModal}
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white/75 transition hover:bg-white/[0.06] hover:text-white"
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-white/75 transition hover:bg-white/[0.06] hover:text-white"
                 >
                   Cancelar
                 </button>
@@ -661,7 +661,7 @@ export default function Page() {
                 <button
                   onClick={() => handleReject(rejectCode)}
                   disabled={rejectingCode === rejectCode}
-                  className="w-full rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 font-medium text-red-200 transition hover:bg-red-500/20 disabled:opacity-50"
+                  className="w-full rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-200 transition hover:bg-red-500/20 disabled:opacity-50"
                 >
                   {rejectingCode === rejectCode
                     ? "Rechazando..."
