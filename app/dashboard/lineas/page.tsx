@@ -122,22 +122,25 @@ export default function LineasPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white">
-      {/* FONDO GLOW */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-[-140px] h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[120px]" />
-        <div className="absolute left-[10%] top-[25%] h-[240px] w-[240px] rounded-full bg-violet-600/15 blur-[120px]" />
-        <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-pink-500/10 blur-[130px]" />
-      </div>
+    <div className="relative min-h-screen overflow-x-hidden bg-[#05030a] text-white">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(circle at 50% 8%, rgba(168,85,247,0.18), transparent 28%),
+            radial-gradient(circle at 14% 30%, rgba(139,92,246,0.10), transparent 22%),
+            radial-gradient(circle at 86% 76%, rgba(236,72,153,0.08), transparent 24%)
+          `,
+        }}
+      />
 
-      <div className="relative z-10">
-        {/* HEADER */}
-        <div className="mb-8">
-          <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-white/45 backdrop-blur-sm">
+      <div className="relative z-10 px-3 pt-5 pb-8 sm:px-4 sm:pt-6 sm:pb-10 lg:px-6">
+        <div className="mb-6 sm:mb-8">
+          <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-white/45 backdrop-blur-sm sm:text-[11px]">
             Líneas
           </div>
 
-          <h1 className="mt-4 text-4xl font-semibold md:text-5xl">
+          <h1 className="mt-3 text-3xl font-semibold leading-none sm:mt-4 sm:text-4xl md:text-5xl">
             <span className="bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
               Gestión de tus
             </span>{" "}
@@ -146,104 +149,147 @@ export default function LineasPage() {
             </span>
           </h1>
 
-          <p className="mt-4 text-white/55">
+          <p className="mt-3 text-xs text-white/55 sm:mt-4 sm:text-sm">
             Usadas: {lines.length} / {maxLines}
           </p>
         </div>
 
-        {/* AGREGAR */}
         {!limitReached ? (
-          <div className="mb-6 rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_50px_rgba(217,70,239,0.08)] backdrop-blur-xl">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-2.5 w-2.5 rounded-full bg-fuchsia-400 shadow-[0_0_20px_rgba(217,70,239,0.9)]" />
-              <h2 className="text-xl font-semibold">Agregar línea</h2>
-            </div>
+          <div className="relative mb-6 overflow-hidden rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4 shadow-[0_0_28px_rgba(217,70,239,0.06)] backdrop-blur-xl sm:p-5">
+            <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-fuchsia-400/60 to-transparent" />
+            <div className="pointer-events-none absolute -top-10 left-1/2 h-20 w-20 -translate-x-1/2 rounded-full bg-fuchsia-500/10 blur-3xl" />
 
-            <div className="flex flex-col gap-3 md:flex-row">
-              <input
-                className="flex-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm outline-none"
-                placeholder="Nombre (Ej: Morena)"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+            <div className="relative">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="h-2.5 w-2.5 rounded-full bg-fuchsia-400 shadow-[0_0_14px_rgba(217,70,239,0.8)]" />
+                <h2 className="text-lg font-semibold text-white sm:text-xl">
+                  Agregar línea
+                </h2>
+              </div>
 
-              <input
-                className="flex-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm outline-none"
-                placeholder="Número (Ej: +54911...)"
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
-              />
+              <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
+                <div>
+                  <label className="mb-1.5 block text-xs text-white/65 sm:text-sm">
+                    Nombre
+                  </label>
+                  <input
+                    className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
+                    placeholder=""
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
 
-              <button
-                onClick={addLine}
-                disabled={loadingAdd}
-                className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-5 py-3 text-sm font-medium text-white shadow-[0_0_25px_rgba(217,70,239,0.25)] transition hover:scale-[1.02]"
-              >
-                {loadingAdd ? "..." : "Agregar"}
-              </button>
+                <div>
+                  <label className="mb-1.5 block text-xs text-white/65 sm:text-sm">
+                    Número
+                  </label>
+                  <input
+                    className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
+                    placeholder=""
+                    value={number}
+                    onChange={(e) => setNumber(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex items-end">
+                  <button
+                    onClick={addLine}
+                    disabled={loadingAdd}
+                    className="w-full rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-2.5 text-sm font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02] hover:shadow-[0_0_26px_rgba(217,70,239,0.28)] disabled:opacity-50 md:w-auto"
+                  >
+                    {loadingAdd ? "Agregando..." : "Agregar"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="mb-6 rounded-3xl border border-yellow-400/20 bg-yellow-500/10 p-5 text-sm">
+          <div className="mb-6 rounded-3xl border border-yellow-400/20 bg-yellow-500/10 p-4 text-sm text-yellow-100 backdrop-blur-xl sm:p-5">
             Límite alcanzado. Necesitás upgrade para agregar más líneas.
           </div>
         )}
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && (
+          <div className="mb-4 rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+            {error}
+          </div>
+        )}
 
-        {/* LISTA */}
         <div className="space-y-3">
           {lines.map((l) => (
             <div
               key={l.id}
-              className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl"
+              className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4 shadow-[0_0_18px_rgba(168,85,247,0.06)] backdrop-blur-xl transition hover:bg-white/[0.06] sm:p-5"
             >
+              <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/50 to-transparent" />
+              <div className="pointer-events-none absolute -top-8 left-1/2 h-16 w-16 -translate-x-1/2 rounded-full bg-violet-500/10 blur-2xl" />
+
               {editingId === l.id ? (
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                  <div className="flex w-full gap-2">
-                    <input
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                    />
-                    <input
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm"
-                      value={editNumber}
-                      onChange={(e) => setEditNumber(e.target.value)}
-                    />
+                <div className="relative flex flex-col gap-3">
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <div>
+                      <label className="mb-1.5 block text-xs text-white/65 sm:text-sm">
+                        Nombre
+                      </label>
+                      <input
+                        className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs text-white/65 sm:text-sm">
+                        Número
+                      </label>
+                      <input
+                        className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
+                        value={editNumber}
+                        onChange={(e) => setEditNumber(e.target.value)}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex gap-2">
                     <button
                       onClick={() => saveEdit(l.id)}
-                      className="btn-secondary"
+                      className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-2 text-sm font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02]"
                     >
-                      Guardar
+                      {loadingId === l.id ? "Guardando..." : "Guardar"}
                     </button>
-                    <button onClick={cancelEdit} className="btn-secondary">
+
+                    <button
+                      onClick={cancelEdit}
+                      className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-white/75 transition hover:bg-white/[0.08] hover:text-white"
+                    >
                       Cancelar
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-lg font-semibold">{l.name}</div>
-                    <div className="text-sm text-white/55">{l.number}</div>
+                <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <div className="truncate text-base font-semibold text-white sm:text-lg">
+                      {l.name}
+                    </div>
+                    <div className="mt-1 truncate text-sm text-white/55">
+                      {l.number}
+                    </div>
                   </div>
 
                   <div className="flex gap-2">
                     <button
                       onClick={() => startEdit(l)}
-                      className="btn-secondary"
+                      className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-white/75 transition hover:bg-white/[0.08] hover:text-white"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => removeLine(l.id)}
-                      className="btn-secondary text-red-400"
+                      className="rounded-full border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm text-red-300 transition hover:bg-red-500/20"
                     >
-                      {loadingId === l.id ? "..." : "Borrar"}
+                      {loadingId === l.id ? "Borrando..." : "Borrar"}
                     </button>
                   </div>
                 </div>
