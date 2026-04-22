@@ -80,8 +80,20 @@ export default function DashboardLayout({
   const isAdmin = me?.user?.role === "admin";
 
   return (
-    <div className="min-h-screen bg-transparent text-white">
-      <div className="flex min-h-screen">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#05030a] text-white">
+      {/* Glow global del dashboard */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(circle at 50% 0%, rgba(168,85,247,0.16), transparent 22%),
+            radial-gradient(circle at 12% 24%, rgba(139,92,246,0.10), transparent 20%),
+            radial-gradient(circle at 88% 78%, rgba(236,72,153,0.08), transparent 22%)
+          `,
+        }}
+      />
+
+      <div className="relative z-10 flex min-h-screen">
         {/* Sidebar desktop */}
         <aside className="relative hidden w-72 border-r border-white/10 bg-black/30 p-5 backdrop-blur-2xl lg:block">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -222,7 +234,7 @@ export default function DashboardLayout({
                 </p>
 
                 <div className="mt-2">
-                  <div className="text-sm font-medium text-white break-all">
+                  <div className="break-all text-sm font-medium text-white">
                     {me?.user?.email || "Cargando..."}
                   </div>
                   <div className="mt-1 text-sm text-white/50">
