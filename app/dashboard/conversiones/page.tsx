@@ -39,6 +39,7 @@ export default function Page() {
   const [confirmingCode, setConfirmingCode] = useState("");
   const [rejectingCode, setRejectingCode] = useState("");
   const [selectedCode, setSelectedCode] = useState("");
+  const [rejectCode, setRejectCode] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [amount, setAmount] = useState("");
   const [phone, setPhone] = useState("");
@@ -49,7 +50,11 @@ export default function Page() {
     return `agenda_players_${currentUserId}`;
   }
 
-  function savePlayerToAgendaLocal(currentUserId: string, name: string, phone: string) {
+  function savePlayerToAgendaLocal(
+    currentUserId: string,
+    name: string,
+    phone: string
+  ) {
     if (!currentUserId) return;
 
     const storageKey = getAgendaStorageKey(currentUserId);
@@ -143,6 +148,14 @@ export default function Page() {
     setPhone("");
   }
 
+  function openRejectModal(code: string) {
+    setRejectCode(code);
+  }
+
+  function closeRejectModal() {
+    setRejectCode("");
+  }
+
   async function handleConfirm() {
     try {
       if (!selectedCode) return;
@@ -196,9 +209,6 @@ export default function Page() {
   }
 
   async function handleReject(code: string) {
-    const ok = window.confirm("¿Seguro que querés rechazar este bono?");
-    if (!ok) return;
-
     try {
       setRejectingCode(code);
 
@@ -216,6 +226,7 @@ export default function Page() {
         throw new Error(data?.error || "Error rechazando");
       }
 
+      closeRejectModal();
       await loadPending();
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error interno");
@@ -449,7 +460,7 @@ export default function Page() {
                             </button>
 
                             <button
-                              onClick={() => handleReject(item.code)}
+                              onClick={() => openRejectModal(item.code)}
                               disabled={rejectingCode === item.code}
                               className="rounded-full border border-white/10 bg-white/[0.05] px-2 py-1 text-[10px] font-medium text-white/75 transition hover:bg-white/[0.08] hover:text-white disabled:opacity-50 sm:px-3 sm:py-1.5 sm:text-xs"
                             >
@@ -614,6 +625,47 @@ export default function Page() {
                   {confirmingCode === selectedCode
                     ? "Confirmando..."
                     : "Confirmar"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {rejectCode && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0a0a10] p-5 shadow-[0_0_60px_rgba(217,70,239,0.16)] sm:p-6">
+            <div className="pointer-events-none absolute left-1/2 top-[-80px] h-40 w-40 -translate-x-1/2 rounded-full bg-fuchsia-600/20 blur-[80px]" />
+
+            <div className="relative z-10">
+              <div className="inline-flex rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-white/60 sm:text-[11px]">
+                Rechazar
+              </div>
+
+              <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">
+                ¿Seguro que queres rechazar este cliente?
+              </h2>
+
+              <p className="mt-3 text-sm text-white/55">
+                Esta acción eliminará el pendiente seleccionado.
+              </p>
+
+              <div className="mt-6 flex gap-3">
+                <button
+                  onClick={closeRejectModal}
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white/75 transition hover:bg-white/[0.06] hover:text-white"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  onClick={() => handleReject(rejectCode)}
+                  disabled={rejectingCode === rejectCode}
+                  className="w-full rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 font-medium text-red-200 transition hover:bg-red-500/20 disabled:opacity-50"
+                >
+                  {rejectingCode === rejectCode
+                    ? "Rechazando..."
+                    : "Si, rechazar"}
                 </button>
               </div>
             </div>
