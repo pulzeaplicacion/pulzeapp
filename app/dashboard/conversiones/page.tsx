@@ -26,6 +26,12 @@ type MeResponse = {
   };
 };
 
+type AgendaPlayer = {
+  id: string;
+  name: string;
+  phone: string;
+};
+
 export default function Page() {
   const [pending, setPending] = useState<PendingItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +44,49 @@ export default function Page() {
   const [phone, setPhone] = useState("");
   const [filter, setFilter] = useState("all");
   const [userId, setUserId] = useState("");
+
+  function getAgendaStorageKey(currentUserId: string) {
+    return `agenda_players_${currentUserId}`;
+  }
+
+  function savePlayerToAgendaLocal(currentUserId: string, name: string, phone: string) {
+    if (!currentUserId) return;
+
+    const storageKey = getAgendaStorageKey(currentUserId);
+    const saved = localStorage.getItem(storageKey);
+
+    let players: AgendaPlayer[] = [];
+
+    if (saved) {
+      try {
+        players = JSON.parse(saved);
+      } catch {
+        players = [];
+      }
+    }
+
+    const newPlayer: AgendaPlayer = {
+      id: crypto.randomUUID(),
+      name: name.trim(),
+      phone: phone.trim(),
+    };
+
+    const updated = [newPlayer, ...players];
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+  }
+
+  async function savePlayerToMaster(name: string, phone: string) {
+    await fetch("/api/vip", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name.trim(),
+        phone: phone.trim(),
+      }),
+    });
+  }
 
   async function loadPending(currentUserId?: string) {
     try {
@@ -98,6 +147,21 @@ export default function Page() {
     try {
       if (!selectedCode) return;
 
+      if (!playerName.trim()) {
+        alert("Tenés que ingresar el jugador o apodo.");
+        return;
+      }
+
+      if (!amount.trim()) {
+        alert("Tenés que ingresar el monto.");
+        return;
+      }
+
+      if (!phone.trim()) {
+        alert("Tenés que ingresar el teléfono.");
+        return;
+      }
+
       setConfirmingCode(selectedCode);
 
       const res = await fetch("/api/pending/confirm", {
@@ -107,9 +171,9 @@ export default function Page() {
         },
         body: JSON.stringify({
           code: selectedCode,
-          playerName,
+          playerName: playerName.trim(),
           amount,
-          phone,
+          phone: phone.trim(),
         }),
       });
 
@@ -118,6 +182,9 @@ export default function Page() {
       if (!res.ok) {
         throw new Error(data?.error || "Error confirmando");
       }
+
+      savePlayerToAgendaLocal(userId, playerName, phone);
+      await savePlayerToMaster(playerName, phone);
 
       closeConfirmModal();
       await loadPending();
@@ -129,6 +196,9 @@ export default function Page() {
   }
 
   async function handleReject(code: string) {
+    const ok = window.confirm("¿Seguro que querés rechazar este bono?");
+    if (!ok) return;
+
     try {
       setRejectingCode(code);
 
@@ -175,6 +245,17 @@ export default function Page() {
     }
 
     return true;
+  }
+
+  function formatDateTimeWithSeconds(dateString: string) {
+    return new Date(dateString).toLocaleString("es-AR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
   }
 
   const filtered = useMemo(
@@ -355,17 +436,7 @@ export default function Page() {
                         </td>
 
                         <td className="px-2 py-2 text-[10px] leading-tight text-white/55 sm:px-4 sm:py-3 sm:text-xs">
-                          {new Date(item.createdAt).toLocaleDateString("es-AR")}
-                          <br className="sm:hidden" />
-                          <span className="sm:ml-1">
-                            {new Date(item.createdAt).toLocaleTimeString(
-                              "es-AR",
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }
-                            )}
-                          </span>
+                          {formatDateTimeWithSeconds(item.createdAt)}
                         </td>
 
                         <td className="px-2 py-2 sm:px-4 sm:py-3">
@@ -461,17 +532,7 @@ export default function Page() {
                         </td>
 
                         <td className="px-2 py-2 text-[10px] leading-tight text-white/55 sm:px-4 sm:py-3 sm:text-xs">
-                          {new Date(item.createdAt).toLocaleDateString("es-AR")}
-                          <br className="sm:hidden" />
-                          <span className="sm:ml-1">
-                            {new Date(item.createdAt).toLocaleTimeString(
-                              "es-AR",
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }
-                            )}
-                          </span>
+                          {formatDateTimeWithSeconds(item.createdAt)}
                         </td>
                       </tr>
                     ))}
@@ -526,7 +587,7 @@ export default function Page() {
 
               <div className="mt-4">
                 <label className="mb-2 block text-sm text-white/65">
-                  Teléfono (opcional)
+                  Teléfono
                 </label>
                 <input
                   type="text"
