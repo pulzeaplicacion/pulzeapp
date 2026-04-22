@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Player = {
   id: string;
@@ -20,6 +20,7 @@ export default function Page() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
 
@@ -93,6 +94,18 @@ export default function Page() {
     save(updated, userId);
   }
 
+  const filteredPlayers = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    if (!term) return players;
+
+    return players.filter((p) => {
+      return (
+        p.name.toLowerCase().includes(term) ||
+        p.phone.toLowerCase().includes(term)
+      );
+    });
+  }, [players, search]);
+
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#05030a] text-white">
       <div
@@ -127,26 +140,28 @@ export default function Page() {
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
-          <form
-            onSubmit={handleAdd}
-            className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 shadow-[0_0_28px_rgba(217,70,239,0.06)] backdrop-blur-xl sm:p-5"
-          >
+        <form
+          onSubmit={handleAdd}
+          className="relative overflow-hidden rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4 shadow-[0_0_28px_rgba(217,70,239,0.06)] backdrop-blur-xl sm:p-5"
+        >
+          <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-fuchsia-400/60 to-transparent" />
+          <div className="pointer-events-none absolute -top-10 left-1/2 h-20 w-20 -translate-x-1/2 rounded-full bg-fuchsia-500/10 blur-3xl" />
+
+          <div className="relative">
             <div className="mb-4 flex items-center gap-3">
               <div className="h-2.5 w-2.5 rounded-full bg-fuchsia-400 shadow-[0_0_14px_rgba(217,70,239,0.8)]" />
               <h2 className="text-lg font-semibold text-white sm:text-xl">
-                Agregar jugador
+                Guardar jugador
               </h2>
             </div>
 
-            <div className="space-y-3 sm:space-y-4">
+            <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
               <div>
-                <label className="mb-1.5 block text-xs text-white/65 sm:mb-2 sm:text-sm">
+                <label className="mb-1.5 block text-xs text-white/65 sm:text-sm">
                   Nombre o apodo
                 </label>
                 <input
                   type="text"
-                  placeholder="Ej: Mati slots"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
@@ -154,56 +169,29 @@ export default function Page() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs text-white/65 sm:mb-2 sm:text-sm">
+                <label className="mb-1.5 block text-xs text-white/65 sm:text-sm">
                   Teléfono
                 </label>
                 <input
                   type="text"
-                  placeholder="Ej: 3492123456"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-2.5 text-sm font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02] hover:shadow-[0_0_26px_rgba(217,70,239,0.28)] disabled:opacity-50"
-              >
-                {loading ? "Guardando..." : "Guardar jugador"}
-              </button>
-            </div>
-          </form>
-
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 shadow-[0_0_28px_rgba(139,92,246,0.06)] backdrop-blur-xl sm:p-5">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.8)]" />
-              <h2 className="text-lg font-semibold text-white sm:text-xl">
-                Resumen
-              </h2>
-            </div>
-
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-white/60">Jugadores guardados</span>
-                <span className="text-white">{players.length}</span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-white/60">Estado</span>
-                <span className="text-emerald-400">
-                  {players.length > 0 ? "Activo" : "Vacío"}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-white/60">Backup local</span>
-                <span className="text-white">OK</span>
+              <div className="flex items-end">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-2.5 text-sm font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02] hover:shadow-[0_0_26px_rgba(217,70,239,0.28)] disabled:opacity-50 md:w-auto"
+                >
+                  {loading ? "Guardando..." : "Guardar"}
+                </button>
               </div>
             </div>
           </div>
-        </div>
+        </form>
 
         <div className="mt-8 sm:mt-10">
           <div className="mb-3 flex items-center gap-3 sm:mb-4">
@@ -213,13 +201,25 @@ export default function Page() {
             </h2>
           </div>
 
-          {players.length === 0 ? (
+          <div className="mb-4">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-cyan-400/30 focus:bg-white/[0.06] sm:py-3"
+              placeholder="Buscar por nombre o teléfono"
+            />
+          </div>
+
+          {filteredPlayers.length === 0 ? (
             <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/55 backdrop-blur-xl sm:p-5">
-              No hay jugadores guardados todavía.
+              {players.length === 0
+                ? "No hay jugadores guardados todavía."
+                : "No se encontraron jugadores con esa búsqueda."}
             </div>
           ) : (
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {players.map((p) => (
+              {filteredPlayers.map((p) => (
                 <div
                   key={p.id}
                   className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4 shadow-[0_0_18px_rgba(168,85,247,0.06)] backdrop-blur-xl transition hover:bg-white/[0.06] sm:p-5"
