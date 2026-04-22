@@ -302,16 +302,15 @@ export default function Page() {
 
           <h1 className="mt-3 max-w-3xl text-3xl font-semibold leading-none sm:mt-4 sm:text-4xl md:text-5xl">
             <span className="bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
-              Controlá tus
+              Centro de
             </span>{" "}
             <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-violet-400 bg-clip-text text-transparent">
-              conversiones
+              CONVERSIONES
             </span>
           </h1>
 
           <p className="mt-3 max-w-2xl text-xs text-white/55 sm:mt-4 sm:text-sm md:text-base">
-            Seguimiento de bonos, pendientes y confirmados con una vista más
-            limpia para operar rápido.
+            Confirmá ventas y medí resultados en tiempo real.
           </p>
         </div>
 
