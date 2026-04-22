@@ -48,9 +48,7 @@ export default function LoginPage() {
               className="mx-auto mb-1.5 h-14 object-contain sm:mb-2 sm:h-16"
             />
 
-            <p className="mt-0.5 text-[10px] text-white/60 sm:mt-1 sm:text-[13px]">
-              Acceso al panel
-            </p>
+      
           </div>
 
           {/* Form */}
@@ -94,7 +92,7 @@ export default function LoginPage() {
 
           <div className="mt-2.5 text-center sm:mt-3">
             <p className="text-[9px] text-white/35 sm:text-[10px]">
-              Panel interno
+              Acceso al panel pulze
             </p>
           </div>
         </div>
