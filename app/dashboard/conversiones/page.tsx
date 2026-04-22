@@ -643,7 +643,7 @@ export default function Page() {
               </div>
 
               <h2 className="mt-3 text-lg font-semibold text-white sm:mt-4 sm:text-xl">
-                ¿Seguro que queres rechazar este cliente?
+                ¿Rechazar este cliente?
               </h2>
 
               <p className="mt-2 text-xs text-white/55 sm:mt-3 sm:text-sm">
