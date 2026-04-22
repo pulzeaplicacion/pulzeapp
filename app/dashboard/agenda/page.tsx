@@ -94,20 +94,25 @@ export default function Page() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-[-140px] h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[120px]" />
-        <div className="absolute left-[10%] top-[25%] h-[240px] w-[240px] rounded-full bg-violet-600/15 blur-[120px]" />
-        <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-pink-500/10 blur-[130px]" />
-      </div>
+    <div className="relative min-h-screen overflow-x-hidden bg-[#05030a] text-white">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(circle at 50% 8%, rgba(168,85,247,0.18), transparent 28%),
+            radial-gradient(circle at 14% 30%, rgba(139,92,246,0.10), transparent 22%),
+            radial-gradient(circle at 86% 76%, rgba(236,72,153,0.08), transparent 24%)
+          `,
+        }}
+      />
 
-      <div className="relative z-10">
-        <div className="mb-8">
-          <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-white/45 backdrop-blur-sm">
+      <div className="relative z-10 px-3 pt-5 pb-8 sm:px-4 sm:pt-6 sm:pb-10 lg:px-6">
+        <div className="mb-6 sm:mb-8">
+          <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-white/45 backdrop-blur-sm sm:text-[11px]">
             Agenda
           </div>
 
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-none md:text-5xl">
+          <h1 className="mt-3 max-w-3xl text-3xl font-semibold leading-none sm:mt-4 sm:text-4xl md:text-5xl">
             <span className="bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
               Backup premium de tus
             </span>{" "}
@@ -116,27 +121,27 @@ export default function Page() {
             </span>
           </h1>
 
-          <p className="mt-4 max-w-2xl text-sm text-white/55 md:text-base">
-            Guardá contactos importantes y mantené una agenda limpia de
-            jugadores valiosos para futuras acciones y seguimiento.
+          <p className="mt-3 max-w-2xl text-xs text-white/55 sm:mt-4 sm:text-sm md:text-base">
+            Guardá contactos importantes y mantené una agenda limpia para futuras
+            acciones y seguimiento.
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-[1.1fr_1fr]">
+        <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
           <form
             onSubmit={handleAdd}
-            className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_50px_rgba(217,70,239,0.08)] backdrop-blur-xl"
+            className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 shadow-[0_0_28px_rgba(217,70,239,0.06)] backdrop-blur-xl sm:p-5"
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="h-2.5 w-2.5 rounded-full bg-fuchsia-400 shadow-[0_0_20px_rgba(217,70,239,0.9)]" />
-              <h2 className="text-xl font-semibold text-white">
+              <div className="h-2.5 w-2.5 rounded-full bg-fuchsia-400 shadow-[0_0_14px_rgba(217,70,239,0.8)]" />
+              <h2 className="text-lg font-semibold text-white sm:text-xl">
                 Agregar jugador
               </h2>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div>
-                <label className="mb-2 block text-sm text-white/65">
+                <label className="mb-1.5 block text-xs text-white/65 sm:mb-2 sm:text-sm">
                   Nombre o apodo
                 </label>
                 <input
@@ -144,12 +149,12 @@ export default function Page() {
                   placeholder="Ej: Mati slots"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06]"
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-white/65">
+                <label className="mb-1.5 block text-xs text-white/65 sm:mb-2 sm:text-sm">
                   Teléfono
                 </label>
                 <input
@@ -157,24 +162,26 @@ export default function Page() {
                   placeholder="Ej: 3492123456"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06]"
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-fuchsia-400/40 focus:bg-white/[0.06] sm:py-3"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-5 py-3 text-sm font-medium text-white shadow-[0_0_25px_rgba(217,70,239,0.25)] transition hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(217,70,239,0.35)] disabled:opacity-50"
+                className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-2.5 text-sm font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02] hover:shadow-[0_0_26px_rgba(217,70,239,0.28)] disabled:opacity-50"
               >
                 {loading ? "Guardando..." : "Guardar jugador"}
               </button>
             </div>
           </form>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_50px_rgba(139,92,246,0.08)] backdrop-blur-xl">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 shadow-[0_0_28px_rgba(139,92,246,0.06)] backdrop-blur-xl sm:p-5">
             <div className="mb-4 flex items-center gap-3">
-              <div className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.9)]" />
-              <h2 className="text-xl font-semibold text-white">Resumen</h2>
+              <div className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.8)]" />
+              <h2 className="text-lg font-semibold text-white sm:text-xl">
+                Resumen
+              </h2>
             </div>
 
             <div className="space-y-3 text-sm">
@@ -198,14 +205,16 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="mt-10">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.9)]" />
-            <h2 className="text-xl font-semibold text-white">Jugadores</h2>
+        <div className="mt-8 sm:mt-10">
+          <div className="mb-3 flex items-center gap-3 sm:mb-4">
+            <div className="h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_14px_rgba(34,211,238,0.8)]" />
+            <h2 className="text-lg font-semibold text-white sm:text-xl">
+              Jugadores
+            </h2>
           </div>
 
           {players.length === 0 ? (
-            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-white/55 backdrop-blur-xl">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/55 backdrop-blur-xl sm:p-5">
               No hay jugadores guardados todavía.
             </div>
           ) : (
@@ -213,21 +222,24 @@ export default function Page() {
               {players.map((p) => (
                 <div
                   key={p.id}
-                  className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl transition hover:bg-white/[0.06]"
+                  className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4 shadow-[0_0_18px_rgba(168,85,247,0.06)] backdrop-blur-xl transition hover:bg-white/[0.06] sm:p-5"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="text-lg font-semibold text-white">
+                  <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/50 to-transparent" />
+                  <div className="pointer-events-none absolute -top-8 left-1/2 h-16 w-16 -translate-x-1/2 rounded-full bg-violet-500/10 blur-2xl" />
+
+                  <div className="relative flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="truncate text-base font-semibold text-white sm:text-lg">
                         {p.name}
                       </div>
-                      <div className="mt-1 text-sm text-white/55">
+                      <div className="mt-1 truncate text-sm text-white/55">
                         {p.phone}
                       </div>
                     </div>
 
                     <button
                       onClick={() => handleDelete(p.id)}
-                      className="rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-xs text-red-300 transition hover:bg-red-500/20"
+                      className="shrink-0 rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] text-red-300 transition hover:bg-red-500/20"
                     >
                       Eliminar
                     </button>
