@@ -163,20 +163,25 @@ export default function Page() {
   const promedio = jugadores > 0 ? total / jugadores : 0;
 
   return (
-<div className="relative min-h-screen overflow-hidden text-white">
-        <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-[-140px] h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[120px]" />
-        <div className="absolute left-[10%] top-[25%] h-[240px] w-[240px] rounded-full bg-violet-600/15 blur-[120px]" />
-        <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-pink-500/10 blur-[130px]" />
-      </div>
+    <div className="relative min-h-screen overflow-x-hidden bg-[#05030a] text-white">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(circle at 50% 8%, rgba(168,85,247,0.18), transparent 28%),
+            radial-gradient(circle at 14% 30%, rgba(139,92,246,0.10), transparent 22%),
+            radial-gradient(circle at 86% 76%, rgba(236,72,153,0.08), transparent 24%)
+          `,
+        }}
+      />
 
-      <div className="relative z-10">
-        <div className="mb-8">
-          <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-white/45 backdrop-blur-sm">
+      <div className="relative z-10 px-3 pt-5 pb-8 sm:px-4 sm:pt-6 sm:pb-10 lg:px-6">
+        <div className="mb-6 sm:mb-8">
+          <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-white/45 backdrop-blur-sm sm:text-[11px]">
             Conversiones
           </div>
 
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-none md:text-5xl">
+          <h1 className="mt-3 max-w-3xl text-3xl font-semibold leading-none sm:mt-4 sm:text-4xl md:text-5xl">
             <span className="bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
               Controlá tus
             </span>{" "}
@@ -185,13 +190,13 @@ export default function Page() {
             </span>
           </h1>
 
-          <p className="mt-4 max-w-2xl text-sm text-white/55 md:text-base">
+          <p className="mt-3 max-w-2xl text-xs text-white/55 sm:mt-4 sm:text-sm md:text-base">
             Seguimiento de bonos, pendientes y confirmados con una vista más
             limpia para operar rápido.
           </p>
         </div>
 
-        <div className="mb-6 flex flex-wrap gap-2">
+        <div className="mb-5 flex flex-wrap gap-2 sm:mb-6">
           {[
             { key: "all", label: "Todo" },
             { key: "today", label: "Hoy" },
@@ -205,9 +210,9 @@ export default function Page() {
                 key={f.key}
                 onClick={() => setFilter(f.key)}
                 className={[
-                  "rounded-full border px-4 py-2 text-sm transition-all duration-200",
+                  "rounded-full border px-3 py-1.5 text-xs transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm",
                   active
-                    ? "border-fuchsia-400/40 bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white shadow-[0_0_30px_rgba(192,38,211,0.24)]"
+                    ? "border-fuchsia-400/40 bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white shadow-[0_0_22px_rgba(192,38,211,0.22)]"
                     : "border-white/10 bg-white/[0.04] text-white/70 hover:border-white/20 hover:bg-white/[0.08] hover:text-white",
                 ].join(" ")}
               >
@@ -217,66 +222,85 @@ export default function Page() {
           })}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-            <p className="text-sm text-white/50">Total generado</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
+        <div className="mb-6 grid grid-cols-3 gap-3">
+          <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-3 text-center backdrop-blur-xl shadow-[0_0_18px_rgba(168,85,247,0.06)] sm:p-4">
+            <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-fuchsia-400/60 to-transparent" />
+            <div className="pointer-events-none absolute -top-8 left-1/2 h-16 w-16 -translate-x-1/2 rounded-full bg-fuchsia-500/10 blur-2xl" />
+
+            <p className="relative text-lg font-semibold tracking-tight text-white sm:text-2xl">
               ${total.toLocaleString("es-AR")}
             </p>
-            <div className="mt-3 h-px bg-gradient-to-r from-fuchsia-500/40 to-transparent" />
+
+            <p className="relative mt-2 text-[10px] leading-[1.15] text-white/50 sm:text-[11px]">
+              Total
+              <br />
+              generado
+            </p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-            <p className="text-sm text-white/50">Jugadores</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
+          <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-3 text-center backdrop-blur-xl shadow-[0_0_18px_rgba(168,85,247,0.06)] sm:p-4">
+            <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-pink-400/60 to-transparent" />
+            <div className="pointer-events-none absolute -top-8 left-1/2 h-16 w-16 -translate-x-1/2 rounded-full bg-pink-500/10 blur-2xl" />
+
+            <p className="relative text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               {jugadores}
             </p>
-            <div className="mt-3 h-px bg-gradient-to-r from-pink-500/40 to-transparent" />
+
+            <p className="relative mt-2 text-[10px] leading-[1.15] text-white/50 sm:text-[11px]">
+              Jugadores
+            </p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl">
-            <p className="text-sm text-white/50">Promedio</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
+          <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-3 text-center backdrop-blur-xl shadow-[0_0_18px_rgba(168,85,247,0.06)] sm:p-4">
+            <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+            <div className="pointer-events-none absolute -top-8 left-1/2 h-16 w-16 -translate-x-1/2 rounded-full bg-cyan-500/10 blur-2xl" />
+
+            <p className="relative text-lg font-semibold tracking-tight text-white sm:text-2xl">
               ${Math.round(promedio).toLocaleString("es-AR")}
             </p>
-            <div className="mt-3 h-px bg-gradient-to-r from-violet-500/40 to-transparent" />
+
+            <p className="relative mt-2 text-[10px] leading-[1.15] text-white/50 sm:text-[11px]">
+              Promedio
+            </p>
           </div>
         </div>
 
-        <div className="mt-10">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-2.5 w-2.5 rounded-full bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.9)]" />
-            <h2 className="text-xl font-semibold text-white">Pendientes</h2>
+        <div className="mt-8 sm:mt-10">
+          <div className="mb-3 flex items-center gap-3 sm:mb-4">
+            <div className="h-2.5 w-2.5 rounded-full bg-yellow-400 shadow-[0_0_14px_rgba(250,204,21,0.8)]" />
+            <h2 className="text-lg font-semibold text-white sm:text-xl">
+              Pendientes
+            </h2>
           </div>
 
           {loading && (
-            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-white/60 backdrop-blur-xl">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/60 backdrop-blur-xl sm:p-5">
               Cargando pendientes...
             </div>
           )}
 
           {error && (
-            <div className="rounded-3xl border border-red-400/20 bg-red-500/10 p-5 text-red-300 backdrop-blur-xl">
+            <div className="rounded-3xl border border-red-400/20 bg-red-500/10 p-4 text-sm text-red-300 backdrop-blur-xl sm:p-5">
               {error}
             </div>
           )}
 
           {!loading && !error && pendientes.length === 0 && (
-            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-white/55 backdrop-blur-xl">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/55 backdrop-blur-xl sm:p-5">
               No hay pendientes.
             </div>
           )}
 
           {!loading && !error && pendientes.length > 0 && (
-            <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_0_50px_rgba(217,70,239,0.08)] backdrop-blur-xl">
+            <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_0_28px_rgba(217,70,239,0.06)] backdrop-blur-xl">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[760px] text-sm">
                   <thead className="bg-white/[0.03] text-white/60">
                     <tr className="text-left">
-                      <th className="px-5 py-4 font-medium">Bono</th>
-                      <th className="px-5 py-4 font-medium">Línea</th>
-                      <th className="px-5 py-4 font-medium">Fecha</th>
-                      <th className="px-5 py-4 font-medium">Acción</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Bono</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Línea</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Fecha</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Acción</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -285,21 +309,21 @@ export default function Page() {
                         key={item.id}
                         className="border-t border-white/10 transition hover:bg-white/[0.03]"
                       >
-                        <td className="px-5 py-4">
+                        <td className="px-4 py-3 sm:px-5 sm:py-4">
                           <span className="rounded-full border border-fuchsia-400/20 bg-fuchsia-500/10 px-3 py-1 font-semibold text-fuchsia-200">
                             {item.code}
                           </span>
                         </td>
-                        <td className="px-5 py-4 text-white/70">
+                        <td className="px-4 py-3 text-white/70 sm:px-5 sm:py-4">
                           {item.line?.name || item.lineId}
                         </td>
-                        <td className="px-5 py-4 text-white/55">
+                        <td className="px-4 py-3 text-white/55 sm:px-5 sm:py-4">
                           {new Date(item.createdAt).toLocaleString("es-AR")}
                         </td>
-                        <td className="px-5 py-4">
+                        <td className="px-4 py-3 sm:px-5 sm:py-4">
                           <button
                             onClick={() => openConfirmModal(item.code)}
-                            className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-2 font-medium text-white shadow-[0_0_25px_rgba(217,70,239,0.25)] transition hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(217,70,239,0.35)]"
+                            className="rounded-full border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-3 py-1.5 text-xs font-medium text-white shadow-[0_0_18px_rgba(217,70,239,0.22)] transition hover:scale-[1.02] hover:shadow-[0_0_26px_rgba(217,70,239,0.28)] sm:px-4 sm:py-2 sm:text-sm"
                           >
                             Confirmar
                           </button>
@@ -313,29 +337,31 @@ export default function Page() {
           )}
         </div>
 
-        <div className="mt-12">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.9)]" />
-            <h2 className="text-xl font-semibold text-white">Confirmados</h2>
+        <div className="mt-10 sm:mt-12">
+          <div className="mb-3 flex items-center gap-3 sm:mb-4">
+            <div className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.8)]" />
+            <h2 className="text-lg font-semibold text-white sm:text-xl">
+              Confirmados
+            </h2>
           </div>
 
           {!loading && !error && confirmados.length === 0 && (
-            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-white/55 backdrop-blur-xl">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/55 backdrop-blur-xl sm:p-5">
               No hay confirmados.
             </div>
           )}
 
           {!loading && !error && confirmados.length > 0 && (
-            <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_0_50px_rgba(139,92,246,0.08)] backdrop-blur-xl">
+            <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_0_28px_rgba(139,92,246,0.06)] backdrop-blur-xl">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[860px] text-sm">
                   <thead className="bg-white/[0.03] text-white/60">
                     <tr className="text-left">
-                      <th className="px-5 py-4 font-medium">Bono</th>
-                      <th className="px-5 py-4 font-medium">Línea</th>
-                      <th className="px-5 py-4 font-medium">Jugador</th>
-                      <th className="px-5 py-4 font-medium">Monto</th>
-                      <th className="px-5 py-4 font-medium">Fecha</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Bono</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Línea</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Jugador</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Monto</th>
+                      <th className="px-4 py-3 font-medium sm:px-5 sm:py-4">Fecha</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -344,23 +370,23 @@ export default function Page() {
                         key={item.id}
                         className="border-t border-white/10 transition hover:bg-white/[0.03]"
                       >
-                        <td className="px-5 py-4">
+                        <td className="px-4 py-3 sm:px-5 sm:py-4">
                           <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 font-semibold text-emerald-200">
                             {item.code}
                           </span>
                         </td>
-                        <td className="px-5 py-4 text-white/70">
+                        <td className="px-4 py-3 text-white/70 sm:px-5 sm:py-4">
                           {item.line?.name || item.lineId}
                         </td>
-                        <td className="px-5 py-4 text-white/70">
+                        <td className="px-4 py-3 text-white/70 sm:px-5 sm:py-4">
                           {item.playerName || "—"}
                         </td>
-                        <td className="px-5 py-4 font-medium text-white">
+                        <td className="px-4 py-3 font-medium text-white sm:px-5 sm:py-4">
                           {item.amount
                             ? `$${item.amount.toLocaleString("es-AR")}`
                             : "—"}
                         </td>
-                        <td className="px-5 py-4 text-white/55">
+                        <td className="px-4 py-3 text-white/55 sm:px-5 sm:py-4">
                           {new Date(item.createdAt).toLocaleString("es-AR")}
                         </td>
                       </tr>
@@ -375,22 +401,22 @@ export default function Page() {
 
       {selectedCode && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0a0a10] p-6 shadow-[0_0_80px_rgba(217,70,239,0.18)]">
+          <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0a0a10] p-5 shadow-[0_0_60px_rgba(217,70,239,0.16)] sm:p-6">
             <div className="pointer-events-none absolute left-1/2 top-[-80px] h-40 w-40 -translate-x-1/2 rounded-full bg-fuchsia-600/25 blur-[80px]" />
 
             <div className="relative z-10">
-              <div className="inline-flex rounded-full border border-fuchsia-400/20 bg-fuchsia-500/10 px-3 py-1 text-[11px] uppercase tracking-[0.25em] text-fuchsia-200">
+              <div className="inline-flex rounded-full border border-fuchsia-400/20 bg-fuchsia-500/10 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-fuchsia-200 sm:text-[11px]">
                 Confirmación
               </div>
 
-              <h2 className="mt-4 text-2xl font-semibold">
+              <h2 className="mt-4 text-xl font-semibold sm:text-2xl">
                 Confirmar bono{" "}
                 <span className="bg-gradient-to-r from-fuchsia-400 to-violet-400 bg-clip-text text-transparent">
                   {selectedCode}
                 </span>
               </h2>
 
-              <div className="mt-6">
+              <div className="mt-5 sm:mt-6">
                 <label className="mb-2 block text-sm text-white/65">
                   Jugador / Apodo
                 </label>
@@ -427,7 +453,7 @@ export default function Page() {
                 />
               </div>
 
-              <div className="mt-6 flex gap-3">
+              <div className="mt-5 flex gap-3 sm:mt-6">
                 <button
                   onClick={closeConfirmModal}
                   className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white/75 transition hover:bg-white/[0.06] hover:text-white"
@@ -438,7 +464,7 @@ export default function Page() {
                 <button
                   onClick={handleConfirm}
                   disabled={confirmingCode === selectedCode}
-                  className="w-full rounded-2xl border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-3 font-medium text-white shadow-[0_0_30px_rgba(217,70,239,0.28)] transition hover:scale-[1.01] hover:shadow-[0_0_38px_rgba(217,70,239,0.35)] disabled:opacity-50"
+                  className="w-full rounded-2xl border border-fuchsia-400/30 bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-3 font-medium text-white shadow-[0_0_24px_rgba(217,70,239,0.24)] transition hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(217,70,239,0.3)] disabled:opacity-50"
                 >
                   {confirmingCode === selectedCode
                     ? "Confirmando..."
