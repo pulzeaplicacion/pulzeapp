@@ -182,25 +182,8 @@
       color:#fff7cc;
     }
 
-    .live-box{
-      width:100%;
-      min-height:38px;
-      margin-top:14px;
-      border-radius:14px;
-      border:1px solid rgba(34,197,94,.22);
-      background:rgba(34,197,94,.08);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:8px 10px;
-      font-size:.72rem;
-      color:#bbf7d0;
-      text-align:center;
-      transition:all .25s ease;
-    }
-
     .urgency{
-      margin-top:11px;
+      margin-top:13px;
       width:100%;
       text-align:center;
       display:flex;
@@ -210,11 +193,26 @@
     }
 
     .urgency-title{
-      font-size:.68rem;
-      color:#fde68a;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid rgba(250,204,21,.28);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(250,204,21,.18), transparent 60%),
+        rgba(255,255,255,.045);
+      color:#fff3b0;
+      font-size:.78rem;
       font-weight:900;
-      text-shadow:0 0 10px rgba(250,204,21,.28);
-      letter-spacing:.04em;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      text-shadow:
+        0 0 6px rgba(255,255,255,.35),
+        0 0 14px rgba(250,204,21,.35);
+      box-shadow:
+        0 0 14px rgba(250,204,21,.10),
+        inset 0 0 14px rgba(250,204,21,.06);
     }
 
     .countdown-wrap{
@@ -289,8 +287,25 @@
       50%{opacity:1}
     }
 
+    .live-box{
+      width:100%;
+      min-height:36px;
+      margin-top:9px;
+      border-radius:14px;
+      border:1px solid rgba(34,197,94,.22);
+      background:rgba(34,197,94,.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 10px;
+      font-size:.70rem;
+      color:#bbf7d0;
+      text-align:center;
+      transition:all .25s ease;
+    }
+
     .cta-btn{
-      margin-top:14px;
+      margin-top:13px;
       width:100%;
       padding:15px 14px;
       border:none;
@@ -334,21 +349,22 @@
     }
 
     .mini-row{
+      width:100%;
       margin-top:12px;
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-      justify-content:center;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:5px;
     }
 
     .mini-pill{
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.05);
       border-radius:999px;
-      padding:5px 8px;
-      font-size:.62rem;
+      padding:5px 5px;
+      font-size:.55rem;
       color:rgba(255,255,255,.72);
       white-space:nowrap;
+      text-align:center;
     }
   </style>
 </head>
@@ -381,10 +397,6 @@
           </span>
         </h1>
 
-        <div class="live-box" id="live-box">
-          ✅ Usuario Juan8372 creado con éxito y bono entregado
-        </div>
-
         <div class="urgency">
 
           <div class="urgency-title">
@@ -412,6 +424,10 @@
             </div>
 
           </div>
+        </div>
+
+        <div class="live-box" id="live-box">
+          ✅ Usuario Juan8372 creado con éxito y bono entregado
         </div>
 
         <button class="cta-btn" id="cta-btn">
