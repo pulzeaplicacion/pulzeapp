@@ -607,9 +607,16 @@
 
       if (!sessionStorage.getItem(clickKey)) {
 
-        fetch(`/api/track/click?key=${LANDING_KEY}`, {
-          method: "POST"
-        });
+        const clickUrl = new URL(`/api/track/click`, window.location.origin);
+
+clickUrl.searchParams.set("key", LANDING_KEY);
+if (fbp) clickUrl.searchParams.set("fbp", fbp);
+if (fbc) clickUrl.searchParams.set("fbc", fbc);
+if (fbclid) clickUrl.searchParams.set("fbclid", fbclid);
+
+fetch(clickUrl.toString(), {
+  method: "POST"
+});
 
         sessionStorage.setItem(clickKey, "true");
       }
