@@ -53,14 +53,8 @@
     }
 
     @keyframes float{
-      from{
-        transform:translateX(-20vw);
-        opacity:.15
-      }
-      to{
-        transform:translateX(110vw);
-        opacity:.9
-      }
+      from{transform:translateX(-20vw);opacity:.15}
+      to{transform:translateX(110vw);opacity:.9}
     }
 
     @keyframes shimmer{
@@ -166,53 +160,47 @@
     }
 
     h1{
-      font-size:1.33rem;
+      font-size:1.38rem;
       text-align:center;
-      line-height:1.12;
-      font-weight:800;
+      line-height:1.08;
+      font-weight:900;
       text-shadow:0 0 12px rgba(255,200,60,.85);
       margin-top:8px;
       letter-spacing:-.02em;
     }
 
-    .h1-line-small{
-      display:block;
-      font-size:1rem;
-      margin-top:7px;
-      color:#fff7cc;
-    }
-
     .urgency{
-      margin-top:13px;
+      margin-top:14px;
       width:100%;
       text-align:center;
       display:flex;
       flex-direction:column;
-      gap:6px;
+      gap:7px;
       align-items:center;
     }
 
     .urgency-title{
-      display:inline-flex;
+      width:100%;
+      display:flex;
       align-items:center;
       justify-content:center;
-      padding:6px 12px;
-      border-radius:999px;
-      border:1px solid rgba(250,204,21,.28);
+      padding:9px 12px;
+      border-radius:18px;
+      border:1px solid rgba(250,204,21,.38);
       background:
-        radial-gradient(circle at 50% 0%, rgba(250,204,21,.18), transparent 60%),
-        rgba(255,255,255,.045);
+        radial-gradient(circle at 50% 0%, rgba(250,204,21,.28), transparent 64%),
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
       color:#fff3b0;
-      font-size:.78rem;
+      font-size:.92rem;
       font-weight:900;
-      letter-spacing:.06em;
+      letter-spacing:.07em;
       text-transform:uppercase;
       text-shadow:
-        0 0 6px rgba(255,255,255,.35),
-        0 0 14px rgba(250,204,21,.35);
+        0 0 6px rgba(255,255,255,.45),
+        0 0 16px rgba(250,204,21,.45);
       box-shadow:
-        0 0 14px rgba(250,204,21,.10),
-        inset 0 0 14px rgba(250,204,21,.06);
+        0 0 18px rgba(250,204,21,.16),
+        inset 0 0 18px rgba(250,204,21,.08);
     }
 
     .countdown-wrap{
@@ -392,9 +380,6 @@
 
         <h1>
           ACTIVÁ TU USUARIO AHORA
-          <span class="h1-line-small">
-            💰 CARGÁ, JUGÁ Y RETIRÁ 💰
-          </span>
         </h1>
 
         <div class="urgency">
